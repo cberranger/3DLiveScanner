@@ -170,6 +170,8 @@ class ReconstructionServer:
                 await self._handle_get_mesh(websocket, session)
             elif msg_type == "reset":
                 await self._handle_reset(websocket, session)
+            elif msg_type == "checkpoint":
+                await self._handle_checkpoint(websocket, session, data)
             elif msg_type == "ping":
                 await websocket.send(msgpack.packb({"type": "pong", "time": time.time()}))
             else:
@@ -227,11 +229,23 @@ class ReconstructionServer:
             }))
             return
 
+        # Ensure depth_bytes is bytes, not list
+        if isinstance(depth_bytes, list):
+            depth_bytes = bytes(depth_bytes)
+        elif not isinstance(depth_bytes, (bytes, bytearray)):
+            depth_bytes = bytes(depth_bytes)
+
         # Calculate actual dimensions from data size
         num_pixels = len(depth_bytes) // 2  # uint16 = 2 bytes
         
+        # Debug: log first time we see depth
+        if session.frame_count == 0:
+            logger.info(f"[{session.client_id}] Depth buffer: {len(depth_bytes)} bytes = {num_pixels} pixels")
+        
         # Try to infer dimensions - common ToF resolutions
         possible_dims = [
+            (480, 480),              # 230400 pixels - S20 Ultra square crop?
+            (640, 360), (360, 640),  # 230400 pixels - 16:9 crop
             (480, 240), (240, 480),  # 115200 pixels - S20 Ultra ToF
             (640, 480), (480, 640),  # 307200 pixels
             (320, 240), (240, 320),  # 76800 pixels - common VGA quarter
@@ -243,27 +257,53 @@ class ReconstructionServer:
         width, height = session.intrinsics.width, session.intrinsics.height
         if width * height != num_pixels:
             # Find matching dimensions
+            found = False
             for w, h in possible_dims:
                 if w * h == num_pixels:
                     width, height = w, h
+                    found = True
                     # Update session intrinsics for future frames
                     if session.intrinsics.width != width or session.intrinsics.height != height:
                         logger.info(f"[{session.client_id}] Updated depth dims: {width}x{height}")
                         session.intrinsics.width = width
                         session.intrinsics.height = height
-                        # Scale fx/fy proportionally
+                        # Recalculate intrinsics for new dimensions
+                        # Assume ~70 degree FOV typical for ToF
+                        session.intrinsics.fx = width * 0.7
+                        session.intrinsics.fy = height * 0.7
                         session.intrinsics.cx = width / 2.0
                         session.intrinsics.cy = height / 2.0
+                        logger.info(f"[{session.client_id}] Updated intrinsics: fx={session.intrinsics.fx:.1f}, fy={session.intrinsics.fy:.1f}")
                     break
-            else:
-                logger.warning(f"[{session.client_id}] Unknown depth size: {num_pixels} pixels")
-                session.frame_count += 1
-                await websocket.send(msgpack.packb({
-                    "type": "frame_ack", 
-                    "frame_id": session.frame_count,
-                    "timestamp": timestamp
-                }))
-                return
+            
+            if not found:
+                # Try to find any reasonable rectangle
+                import math
+                sqrt_pixels = int(math.sqrt(num_pixels))
+                for w in range(sqrt_pixels, sqrt_pixels + 200):
+                    if num_pixels % w == 0:
+                        h = num_pixels // w
+                        if 100 < h < 1000 and 100 < w < 1000:
+                            width, height = w, h
+                            logger.info(f"[{session.client_id}] Inferred depth dims: {width}x{height}")
+                            session.intrinsics.width = width
+                            session.intrinsics.height = height
+                            session.intrinsics.fx = width * 0.7
+                            session.intrinsics.fy = height * 0.7
+                            session.intrinsics.cx = width / 2.0
+                            session.intrinsics.cy = height / 2.0
+                            found = True
+                            break
+                
+                if not found:
+                    logger.warning(f"[{session.client_id}] Unknown depth size: {num_pixels} pixels ({len(depth_bytes)} bytes)")
+                    session.frame_count += 1
+                    await websocket.send(msgpack.packb({
+                        "type": "frame_ack", 
+                        "frame_id": session.frame_count,
+                        "timestamp": timestamp
+                    }))
+                    return
 
         # Convert depth (uint16 mm -> appropriate format)
         depth_np = np.frombuffer(depth_bytes, dtype=np.uint16).reshape(height, width)
@@ -391,6 +431,117 @@ class ReconstructionServer:
             session.frame_count = 0
             session.last_mesh_frame = 0
         await websocket.send(msgpack.packb({"type": "reset_ack"}))
+
+    async def _handle_checkpoint(self, websocket, session: ClientSession, data: dict):
+        """
+        Checkpoint: Extract mesh, optimize, optionally rebuild at new resolution.
+        
+        This consolidates the current scan state:
+        1. Extract mesh from TSDF
+        2. Apply smoothing and decimation
+        3. Optionally rebuild TSDF at new resolution (for resolution changes)
+        4. Return optimized mesh stats
+        """
+        new_resolution = data.get("resolution")  # Optional: new voxel size in meters
+        target_reduction = data.get("decimation", 0.5)  # Target triangle reduction ratio
+        smooth_iterations = data.get("smooth_iterations", 2)
+        
+        logger.info(f"[{session.client_id}] CHECKPOINT: decimation={target_reduction}, smooth={smooth_iterations}")
+        if new_resolution:
+            logger.info(f"[{session.client_id}] Resolution change: {self.voxel_size}m -> {new_resolution}m")
+        
+        try:
+            # Step 1: Extract current mesh
+            with session.lock:
+                if self.use_gpu:
+                    mesh = session.volume.extract_triangle_mesh().to_legacy()
+                else:
+                    mesh = session.volume.extract_triangle_mesh()
+            
+            if len(mesh.vertices) == 0:
+                await websocket.send(msgpack.packb({
+                    "type": "checkpoint_ack",
+                    "success": False,
+                    "error": "No geometry to checkpoint"
+                }))
+                return
+            
+            original_vertices = len(mesh.vertices)
+            original_triangles = len(mesh.triangles)
+            
+            # Step 2: Smooth the mesh (reduces noise from tracking jitter)
+            if smooth_iterations > 0:
+                mesh = mesh.filter_smooth_laplacian(number_of_iterations=smooth_iterations)
+            
+            # Step 3: Decimate (reduce triangle count)
+            if target_reduction < 1.0:
+                target_triangles = int(len(mesh.triangles) * target_reduction)
+                if target_triangles > 100:  # Don't over-decimate
+                    mesh = mesh.simplify_quadric_decimation(target_number_of_triangles=target_triangles)
+            
+            # Step 4: Clean up
+            mesh.remove_degenerate_triangles()
+            mesh.remove_duplicated_triangles()
+            mesh.remove_duplicated_vertices()
+            mesh.remove_unreferenced_vertices()
+            mesh.compute_vertex_normals()
+            
+            final_vertices = len(mesh.vertices)
+            final_triangles = len(mesh.triangles)
+            
+            logger.info(f"[{session.client_id}] Optimized: {original_triangles} -> {final_triangles} triangles "
+                       f"({100*final_triangles/original_triangles:.1f}%)")
+            
+            # Step 5: Handle resolution change (rebuild TSDF from optimized mesh)
+            if new_resolution and new_resolution != self.voxel_size:
+                # TODO: Future - rebuild TSDF at new resolution
+                # This would involve:
+                # 1. Create new volume at new_resolution
+                # 2. Voxelize the optimized mesh into the new volume
+                # 3. Replace session.volume
+                # For now, just update the voxel_size for new frames
+                # session.custom_voxel_size = new_resolution
+                logger.info(f"[{session.client_id}] Resolution change requested but not yet implemented")
+                pass
+            
+            # Store the optimized mesh for potential later use
+            session.checkpoint_mesh = mesh
+            session.checkpoint_count = session.checkpoint_count + 1 if hasattr(session, 'checkpoint_count') else 1
+            
+            # Return mesh data with the response
+            vertices = np.asarray(mesh.vertices, dtype=np.float32)
+            triangles = np.asarray(mesh.triangles, dtype=np.int32)
+            normals = np.asarray(mesh.vertex_normals, dtype=np.float32)
+            
+            response = {
+                "type": "checkpoint_ack",
+                "success": True,
+                "checkpoint_id": session.checkpoint_count if hasattr(session, 'checkpoint_count') else 1,
+                "original_vertices": original_vertices,
+                "original_triangles": original_triangles,
+                "final_vertices": final_vertices,
+                "final_triangles": final_triangles,
+                "reduction_ratio": final_triangles / original_triangles if original_triangles > 0 else 1.0,
+                # Include mesh data so client can update display
+                "vertices": vertices.tobytes(),
+                "triangles": triangles.tobytes(),
+                "normals": normals.tobytes(),
+                "vertex_count": final_vertices,
+                "triangle_count": final_triangles
+            }
+            
+            compressed = lz4.frame.compress(msgpack.packb(response))
+            await websocket.send(compressed)
+            
+        except Exception as e:
+            logger.error(f"[{session.client_id}] Checkpoint failed: {e}")
+            import traceback
+            traceback.print_exc()
+            await websocket.send(msgpack.packb({
+                "type": "checkpoint_ack",
+                "success": False,
+                "error": str(e)
+            }))
 
     async def start(self):
         """Start the server"""
