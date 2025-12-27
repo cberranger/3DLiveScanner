@@ -107,16 +107,17 @@ class ReconstructionServer:
             # Use tensor-based VoxelBlockGrid for GPU
             # Using efficient SLAM types: tsdf=float32, weight=uint16, color=uint16
             # This is the recommended configuration for real-time SLAM
+            # block_count=10000 should be ~1-2GB VRAM for typical indoor scenes
             volume = o3d.t.geometry.VoxelBlockGrid(
                 attr_names=('tsdf', 'weight', 'color'),
                 attr_dtypes=(o3d.core.float32, o3d.core.uint16, o3d.core.uint16),
                 attr_channels=((1,), (1,), (3,)),
                 voxel_size=self.voxel_size,
                 block_resolution=16,
-                block_count=100000,  # Increased capacity
+                block_count=10000,  # Reduced - will grow as needed
                 device=self.device
             )
-            logger.info(f"Created GPU VoxelBlockGrid on {self.device}, voxel_size={self.voxel_size}")
+            logger.info(f"Created GPU VoxelBlockGrid on {self.device}, voxel_size={self.voxel_size}, blocks=10000")
             return volume
         else:
             # Use legacy ScalableTSDFVolume for CPU
@@ -342,48 +343,68 @@ class ReconstructionServer:
 
     def _integrate_gpu(self, session: ClientSession, depth_np: np.ndarray, extrinsic: np.ndarray):
         """GPU-accelerated TSDF integration using tensor API"""
+        import gc
+        
         height, width = depth_np.shape
         
-        # Depth stays as uint16 (mm) - Open3D handles the scale
-        # Create tensor depth image on GPU
-        depth_tensor = o3d.t.geometry.Image(
-            o3d.core.Tensor(depth_np.astype(np.uint16), device=self.device)
-        )
-        
-        # Create dummy color image (gray) - uint8 format as expected by SLAM mode
-        color_np = np.full((height, width, 3), 128, dtype=np.uint8)
-        color_tensor = o3d.t.geometry.Image(
-            o3d.core.Tensor(color_np, device=self.device)
-        )
-        
-        # Intrinsic matrix (3x3) - on CPU for the API
-        intrinsic_cpu = o3d.core.Tensor(
-            [[session.intrinsics.fx, 0, session.intrinsics.cx],
-             [0, session.intrinsics.fy, session.intrinsics.cy],
-             [0, 0, 1]], 
-            dtype=o3d.core.Dtype.Float64, 
-            device=o3d.core.Device("CPU:0")
-        )
-        
-        # Extrinsic (4x4) - on CPU
-        extrinsic_cpu = o3d.core.Tensor(extrinsic, dtype=o3d.core.Dtype.Float64, device=o3d.core.Device("CPU:0"))
-        
-        # Get frustum block coordinates - required for VoxelBlockGrid
-        frustum_block_coords = session.volume.compute_unique_block_coordinates(
-            depth_tensor, intrinsic_cpu, extrinsic_cpu, 
-            depth_scale=1000.0, depth_max=4.0
-        )
-        
-        # Integrate with block coords, depth, and color
-        session.volume.integrate(
-            frustum_block_coords,
-            depth_tensor,
-            color_tensor,
-            intrinsic_cpu,
-            extrinsic_cpu,
-            depth_scale=1000.0,  # mm to m
-            depth_max=4.0
-        )
+        try:
+            # Depth stays as uint16 (mm) - Open3D handles the scale
+            # Create tensor depth image on GPU
+            depth_tensor = o3d.t.geometry.Image(
+                o3d.core.Tensor(depth_np.astype(np.uint16), device=self.device)
+            )
+            
+            # Create dummy color image (gray) - uint8 format as expected by SLAM mode
+            color_np = np.full((height, width, 3), 128, dtype=np.uint8)
+            color_tensor = o3d.t.geometry.Image(
+                o3d.core.Tensor(color_np, device=self.device)
+            )
+            
+            # Intrinsic matrix (3x3) - on CPU for the API
+            intrinsic_cpu = o3d.core.Tensor(
+                [[session.intrinsics.fx, 0, session.intrinsics.cx],
+                 [0, session.intrinsics.fy, session.intrinsics.cy],
+                 [0, 0, 1]], 
+                dtype=o3d.core.Dtype.Float64, 
+                device=o3d.core.Device("CPU:0")
+            )
+            
+            # Extrinsic (4x4) - on CPU
+            extrinsic_cpu = o3d.core.Tensor(extrinsic, dtype=o3d.core.Dtype.Float64, device=o3d.core.Device("CPU:0"))
+            
+            # Get frustum block coordinates - required for VoxelBlockGrid
+            frustum_block_coords = session.volume.compute_unique_block_coordinates(
+                depth_tensor, intrinsic_cpu, extrinsic_cpu, 
+                depth_scale=1000.0, depth_max=4.0
+            )
+            
+            # Debug: log block coords on first few frames
+            if session.frame_count < 3:
+                num_blocks = frustum_block_coords.shape[0]
+                # Check depth stats
+                depth_valid = depth_np[depth_np > 0]
+                if len(depth_valid) > 0:
+                    logger.info(f"[{session.client_id}] Frame {session.frame_count}: {num_blocks} blocks, "
+                               f"depth range: {depth_valid.min()}-{depth_valid.max()}mm, "
+                               f"valid pixels: {len(depth_valid)}/{depth_np.size}")
+            
+            # Integrate with block coords, depth, and color
+            session.volume.integrate(
+                frustum_block_coords,
+                depth_tensor,
+                color_tensor,
+                intrinsic_cpu,
+                extrinsic_cpu,
+                depth_scale=1000.0,  # mm to m
+                depth_max=4.0
+            )
+        finally:
+            # Explicit cleanup to prevent memory leak
+            del depth_tensor, color_tensor, intrinsic_cpu, extrinsic_cpu, frustum_block_coords
+            gc.collect()
+            # Force CUDA memory cleanup
+            if hasattr(o3d.core.cuda, 'release_cache'):
+                o3d.core.cuda.release_cache()
 
     def _integrate_cpu(self, session: ClientSession, depth_np: np.ndarray, extrinsic: np.ndarray):
         """CPU TSDF integration using legacy API"""
