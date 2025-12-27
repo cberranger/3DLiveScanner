@@ -460,13 +460,33 @@ namespace oc {
         reconstruction.binder_mutex_.lock();
         // Get from calibration matrix - use actual depth sensor dimensions
         glm::mat4 calib = reconstruction.frame_calibration;
+        
         // Typical ToF sensor dimensions
-        result[0] = 240;  // width
-        result[1] = 180;  // height
-        result[2] = calib[0][0] * 240.0f / 1920.0f;  // fx scaled to depth res
-        result[3] = calib[1][1] * 180.0f / 1080.0f;  // fy scaled to depth res
-        result[4] = 120.0f;  // cx
-        result[5] = 90.0f;   // cy
+        float depth_w = 240.0f;
+        float depth_h = 180.0f;
+        
+        // Check if calibration matrix is valid
+        float fx = calib[0][0];
+        float fy = calib[1][1];
+        
+        if (fx > 0 && fy > 0) {
+            // Scale from RGB resolution to depth resolution
+            result[0] = depth_w;
+            result[1] = depth_h;
+            result[2] = fx * depth_w / 1920.0f;  // fx scaled to depth res
+            result[3] = fy * depth_h / 1080.0f;  // fy scaled to depth res
+            result[4] = depth_w / 2.0f;  // cx
+            result[5] = depth_h / 2.0f;  // cy
+        } else {
+            // Fallback: typical ToF intrinsics
+            result[0] = depth_w;
+            result[1] = depth_h;
+            result[2] = 200.0f;  // fx (typical for ToF)
+            result[3] = 200.0f;  // fy
+            result[4] = 120.0f;  // cx
+            result[5] = 90.0f;   // cy
+        }
+        
         reconstruction.binder_mutex_.unlock();
         return result;
     }
