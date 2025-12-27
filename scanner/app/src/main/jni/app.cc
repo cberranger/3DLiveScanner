@@ -499,18 +499,6 @@ namespace oc {
         reconstruction.binder_mutex_.unlock();
         return result;
     }
-            // Fallback: typical ToF intrinsics
-            result[0] = depth_w;
-            result[1] = depth_h;
-            result[2] = 200.0f;  // fx (typical for ToF)
-            result[3] = 200.0f;  // fy
-            result[4] = 120.0f;  // cx
-            result[5] = 90.0f;   // cy
-        }
-        
-        reconstruction.binder_mutex_.unlock();
-        return result;
-    }
     
     double App::GetFrameTimestamp() {
         return reconstruction.frame_timestamp;
