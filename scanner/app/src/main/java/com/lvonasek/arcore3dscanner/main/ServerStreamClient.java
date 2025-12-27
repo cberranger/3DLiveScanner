@@ -41,6 +41,10 @@ public class ServerStreamClient {
         void onMeshReceived(byte[] vertices, byte[] triangles, byte[] normals, 
                            int vertexCount, int triangleCount);
         void onFrameAck(int frameId);
+        void onCheckpointComplete(boolean success, int checkpointId, 
+                                  int originalTriangles, int finalTriangles,
+                                  byte[] vertices, byte[] triangles, byte[] normals,
+                                  int vertexCount, int triangleCount);
     }
     
     private final String serverUrl;
@@ -322,6 +326,61 @@ public class ServerStreamClient {
         });
     }
     
+    /**
+     * Request checkpoint - optimize current mesh with smoothing and decimation.
+     * This consolidates the scan state and reduces complexity.
+     * 
+     * @param decimation Target triangle reduction ratio (0.5 = keep 50%)
+     * @param smoothIterations Number of Laplacian smoothing passes
+     */
+    public void requestCheckpoint(float decimation, int smoothIterations) {
+        if (!connected.get()) return;
+        
+        Log.i(TAG, "Requesting checkpoint: decimation=" + decimation + ", smooth=" + smoothIterations);
+        
+        sendHandler.post(() -> {
+            try {
+                MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
+                packer.packMapHeader(3);
+                packer.packString("type"); packer.packString("checkpoint");
+                packer.packString("decimation"); packer.packDouble(decimation);
+                packer.packString("smooth_iterations"); packer.packInt(smoothIterations);
+                webSocket.send(packer.toByteArray());
+                packer.close();
+            } catch (Exception e) {
+                Log.e(TAG, "Checkpoint request failed", e);
+            }
+        });
+    }
+    
+    /**
+     * Request checkpoint with resolution change (future use).
+     * 
+     * @param decimation Target triangle reduction ratio
+     * @param smoothIterations Number of smoothing passes
+     * @param newResolution New voxel size in meters (e.g., 0.02 for 2cm)
+     */
+    public void requestCheckpointWithResolution(float decimation, int smoothIterations, float newResolution) {
+        if (!connected.get()) return;
+        
+        Log.i(TAG, "Requesting checkpoint with resolution change: " + newResolution + "m");
+        
+        sendHandler.post(() -> {
+            try {
+                MessageBufferPacker packer = MessagePack.newDefaultBufferPacker();
+                packer.packMapHeader(4);
+                packer.packString("type"); packer.packString("checkpoint");
+                packer.packString("decimation"); packer.packDouble(decimation);
+                packer.packString("smooth_iterations"); packer.packInt(smoothIterations);
+                packer.packString("resolution"); packer.packDouble(newResolution);
+                webSocket.send(packer.toByteArray());
+                packer.close();
+            } catch (Exception e) {
+                Log.e(TAG, "Checkpoint request failed", e);
+            }
+        });
+    }
+    
     private void handleMessage(ByteBuffer buffer) {
         try {
             byte[] data = new byte[buffer.remaining()];
@@ -346,13 +405,34 @@ public class ServerStreamClient {
             MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
             int mapSize = unpacker.unpackMapHeader();
             
+            // Parse all fields into a map-like structure
             String type = null;
+            boolean success = false;
+            int checkpointId = 0;
+            int originalTriangles = 0;
+            int finalTriangles = 0;
+            byte[] vertices = null;
+            byte[] triangles = null;
+            byte[] normals = null;
+            int vertexCount = 0;
+            int triangleCount = 0;
+            String errorMsg = null;
+            
             for (int i = 0; i < mapSize; i++) {
                 String key = unpacker.unpackString();
-                if (key.equals("type")) {
-                    type = unpacker.unpackString();
-                } else {
-                    unpacker.skipValue();
+                switch (key) {
+                    case "type": type = unpacker.unpackString(); break;
+                    case "success": success = unpacker.unpackBoolean(); break;
+                    case "checkpoint_id": checkpointId = unpacker.unpackInt(); break;
+                    case "original_triangles": originalTriangles = unpacker.unpackInt(); break;
+                    case "final_triangles": finalTriangles = unpacker.unpackInt(); break;
+                    case "vertices": vertices = unpacker.readPayload(unpacker.unpackBinaryHeader()); break;
+                    case "triangles": triangles = unpacker.readPayload(unpacker.unpackBinaryHeader()); break;
+                    case "normals": normals = unpacker.readPayload(unpacker.unpackBinaryHeader()); break;
+                    case "vertex_count": vertexCount = unpacker.unpackInt(); break;
+                    case "triangle_count": triangleCount = unpacker.unpackInt(); break;
+                    case "error": errorMsg = unpacker.unpackString(); break;
+                    default: unpacker.skipValue(); break;
                 }
             }
             
@@ -366,17 +446,26 @@ public class ServerStreamClient {
                     
                 case "frame_ack":
                     pendingFrames.decrementAndGet();
-                    // Could parse frame_id and mesh data here
                     break;
                     
                 case "mesh":
-                    // Parse mesh data and call listener
-                    // This would need more complex unpacking
+                    if (listener != null && vertices != null) {
+                        listener.onMeshReceived(vertices, triangles, normals, vertexCount, triangleCount);
+                    }
+                    break;
+                    
+                case "checkpoint_ack":
+                    Log.i(TAG, "Checkpoint complete: " + originalTriangles + " -> " + finalTriangles + " triangles");
+                    if (listener != null) {
+                        listener.onCheckpointComplete(success, checkpointId, 
+                                originalTriangles, finalTriangles,
+                                vertices, triangles, normals, vertexCount, triangleCount);
+                    }
                     break;
                     
                 case "error":
                     if (listener != null) {
-                        listener.onError("Server error");
+                        listener.onError(errorMsg != null ? errorMsg : "Server error");
                     }
                     break;
             }

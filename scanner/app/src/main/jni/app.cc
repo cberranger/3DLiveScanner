@@ -474,11 +474,12 @@ namespace oc {
         reconstruction.binder_mutex_.lock();
         glm::mat4 calib = reconstruction.frame_calibration;
         
-        // Check if calibration matrix is valid
+        // Check if calibration matrix has reasonable focal length values
+        // RGB camera typically has fx around 1000-2000 for 1920x1080
         float fx = calib[0][0];
         float fy = calib[1][1];
         
-        if (fx > 0 && fy > 0) {
+        if (fx > 500 && fy > 500) {
             // Scale from RGB resolution to depth resolution
             result[0] = depth_w;
             result[1] = depth_h;
@@ -487,11 +488,13 @@ namespace oc {
             result[4] = depth_w / 2.0f;  // cx
             result[5] = depth_h / 2.0f;  // cy
         } else {
-            // Fallback: typical ToF intrinsics
+            // Fallback: typical ToF intrinsics (FOV ~70 degrees)
+            // fx = width / (2 * tan(hfov/2)) ~ 240 / (2 * 0.7) ~ 171
+            // For 480x240: fx ~ 343
             result[0] = depth_w;
             result[1] = depth_h;
-            result[2] = 200.0f;  // fx (typical for ToF)
-            result[3] = 200.0f;  // fy
+            result[2] = depth_w * 0.7f;  // fx ~ 70% of width (typical ToF)
+            result[3] = depth_h * 0.7f;  // fy ~ 70% of height
             result[4] = depth_w / 2.0f;  // cx
             result[5] = depth_h / 2.0f;  // cy
         }

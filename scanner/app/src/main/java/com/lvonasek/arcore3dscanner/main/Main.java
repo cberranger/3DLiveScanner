@@ -322,6 +322,20 @@ public class Main extends AbstractActivity implements View.OnClickListener,
     CheckBox showNormals = findViewById(R.id.show_normals);
     showNormals.setOnCheckedChangeListener((buttonView, isChecked) -> mEditor.swapNormals());
 
+    // Checkpoint button - optimize server mesh
+    Button checkpointButton = findViewById(R.id.checkpoint_button);
+    if (checkpointButton != null) {
+      checkpointButton.setOnClickListener(v -> {
+        if (mServerEnabled && mServerClient != null && mServerClient.isConnected()) {
+          runOnUiThread(() -> {
+            mIndicators.setOverrideMessage(getString(R.string.checkpoint_progress));
+          });
+          // Request checkpoint with 50% decimation, 2 smoothing passes
+          mServerClient.requestCheckpoint(0.5f, 2);
+        }
+      });
+    }
+
     // Buttons and record info
     mEditorButton = findViewById(R.id.editor_button);
     mThumbnailButton = findViewById(R.id.thumbnail_button);
@@ -1021,6 +1035,25 @@ public class Main extends AbstractActivity implements View.OnClickListener,
         if (frameId % 10 == 0) {
           runOnUiThread(() -> updateServerStatus("Streaming: " + frameId + " frames"));
         }
+      }
+
+      @Override
+      public void onCheckpointComplete(boolean success, int checkpointId,
+                                       int originalTriangles, int finalTriangles,
+                                       byte[] vertices, byte[] triangles, byte[] normals,
+                                       int vertexCount, int triangleCount) {
+        runOnUiThread(() -> {
+          if (success) {
+            String msg = String.format(getString(R.string.checkpoint_complete), 
+                                       originalTriangles, finalTriangles);
+            mIndicators.setOverrideMessage(msg);
+            updateServerStatus("Checkpoint #" + checkpointId + " complete");
+            Log.i(TAG, "Checkpoint complete: " + originalTriangles + " -> " + finalTriangles);
+          } else {
+            mIndicators.setOverrideMessage("Checkpoint failed");
+            updateServerStatus("Checkpoint failed");
+          }
+        });
       }
     });
 

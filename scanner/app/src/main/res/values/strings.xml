@@ -34,6 +34,9 @@
     <string name="freeze_scan">Freeze Scan</string>
     <string name="unfreeze_scan">Unfreeze</string>
     <string name="frozen_chunks">Frozen: %d chunks</string>
+    <string name="checkpoint_scan">Checkpoint</string>
+    <string name="checkpoint_progress">Optimizing mesh...</string>
+    <string name="checkpoint_complete">Checkpoint: %d → %d triangles</string>
 
     <!-- Sketchfab uploader !-->
     <string name="description">Description:</string>
@@ -182,6 +185,7 @@
     <string name="scan_rewind">Rewind the scan process to a state from which you want to continue.</string>
 
     <!-- Scan dialog !-->
+    <string name="scan_05cm">0.5 cm - Fine detail</string>
     <string name="scan_1cm">1 cm - Small room</string>
     <string name="scan_2cm">2 cm - Interior</string>
     <string name="scan_4cm">4 cm - Exterior</string>
