@@ -105,16 +105,18 @@ class ReconstructionServer:
         """Create a TSDF volume for reconstruction"""
         if self.use_gpu:
             # Use tensor-based VoxelBlockGrid for GPU
+            # Using efficient SLAM types: tsdf=float32, weight=uint16, color=uint16
+            # This is the recommended configuration for real-time SLAM
             volume = o3d.t.geometry.VoxelBlockGrid(
                 attr_names=('tsdf', 'weight', 'color'),
-                attr_dtypes=(o3d.core.float32, o3d.core.float32, o3d.core.uint16),
+                attr_dtypes=(o3d.core.float32, o3d.core.uint16, o3d.core.uint16),
                 attr_channels=((1,), (1,), (3,)),
                 voxel_size=self.voxel_size,
                 block_resolution=16,
-                block_count=50000,
+                block_count=100000,  # Increased capacity
                 device=self.device
             )
-            logger.debug(f"Created GPU VoxelBlockGrid on {self.device}")
+            logger.info(f"Created GPU VoxelBlockGrid on {self.device}, voxel_size={self.voxel_size}")
             return volume
         else:
             # Use legacy ScalableTSDFVolume for CPU
@@ -340,22 +342,45 @@ class ReconstructionServer:
 
     def _integrate_gpu(self, session: ClientSession, depth_np: np.ndarray, extrinsic: np.ndarray):
         """GPU-accelerated TSDF integration using tensor API"""
-        # Convert to tensor depth image (keep as uint16, scale is 1000 for mm->m)
+        height, width = depth_np.shape
+        
+        # Depth stays as uint16 (mm) - Open3D handles the scale
+        # Create tensor depth image on GPU
         depth_tensor = o3d.t.geometry.Image(
-            o3d.core.Tensor(depth_np, device=self.device)
+            o3d.core.Tensor(depth_np.astype(np.uint16), device=self.device)
         )
         
-        # Intrinsic matrix
-        intrinsic = session.intrinsics.to_tensor(self.device)
+        # Create dummy color image (gray) - uint8 format as expected by SLAM mode
+        color_np = np.full((height, width, 3), 128, dtype=np.uint8)
+        color_tensor = o3d.t.geometry.Image(
+            o3d.core.Tensor(color_np, device=self.device)
+        )
         
-        # Extrinsic
-        extrinsic_tensor = o3d.core.Tensor(extrinsic, dtype=o3d.core.Dtype.Float64, device=self.device)
+        # Intrinsic matrix (3x3) - on CPU for the API
+        intrinsic_cpu = o3d.core.Tensor(
+            [[session.intrinsics.fx, 0, session.intrinsics.cx],
+             [0, session.intrinsics.fy, session.intrinsics.cy],
+             [0, 0, 1]], 
+            dtype=o3d.core.Dtype.Float64, 
+            device=o3d.core.Device("CPU:0")
+        )
         
-        # Integrate
+        # Extrinsic (4x4) - on CPU
+        extrinsic_cpu = o3d.core.Tensor(extrinsic, dtype=o3d.core.Dtype.Float64, device=o3d.core.Device("CPU:0"))
+        
+        # Get frustum block coordinates - required for VoxelBlockGrid
+        frustum_block_coords = session.volume.compute_unique_block_coordinates(
+            depth_tensor, intrinsic_cpu, extrinsic_cpu, 
+            depth_scale=1000.0, depth_max=4.0
+        )
+        
+        # Integrate with block coords, depth, and color
         session.volume.integrate(
+            frustum_block_coords,
             depth_tensor,
-            intrinsic,
-            extrinsic_tensor,
+            color_tensor,
+            intrinsic_cpu,
+            extrinsic_cpu,
             depth_scale=1000.0,  # mm to m
             depth_max=4.0
         )
@@ -387,20 +412,37 @@ class ReconstructionServer:
         try:
             with session.lock:
                 if self.use_gpu:
-                    mesh = session.volume.extract_triangle_mesh()
-                    # Convert tensor mesh to legacy for processing
-                    mesh = mesh.to_legacy()
+                    # Extract tensor mesh - try GPU first, fall back to CPU if memory issues
+                    try:
+                        t_mesh = session.volume.extract_triangle_mesh()
+                    except RuntimeError as e:
+                        if "Unable to allocate" in str(e):
+                            # GPU memory issue - extract on CPU
+                            logger.warning("GPU mesh extraction failed, falling back to CPU")
+                            cpu_volume = session.volume.cpu()
+                            t_mesh = cpu_volume.extract_triangle_mesh()
+                        else:
+                            raise
+                    
+                    # Check if we have vertices
+                    if not hasattr(t_mesh.vertex, 'positions') or t_mesh.vertex.positions.shape[0] == 0:
+                        return None
+                    
+                    # Get vertices and triangles as numpy arrays
+                    vertices = t_mesh.vertex.positions.cpu().numpy().astype(np.float32)
+                    triangles = t_mesh.triangle.indices.cpu().numpy().astype(np.int32)
+                    
+                    # Compute normals on the tensor mesh, then extract
+                    t_mesh.compute_vertex_normals()
+                    normals = t_mesh.vertex.normals.cpu().numpy().astype(np.float32)
                 else:
                     mesh = session.volume.extract_triangle_mesh()
-
-            if len(mesh.vertices) == 0:
-                return None
-
-            mesh.compute_vertex_normals()
-
-            vertices = np.asarray(mesh.vertices, dtype=np.float32)
-            triangles = np.asarray(mesh.triangles, dtype=np.int32)
-            normals = np.asarray(mesh.vertex_normals, dtype=np.float32)
+                    if len(mesh.vertices) == 0:
+                        return None
+                    mesh.compute_vertex_normals()
+                    vertices = np.asarray(mesh.vertices, dtype=np.float32)
+                    triangles = np.asarray(mesh.triangles, dtype=np.int32)
+                    normals = np.asarray(mesh.vertex_normals, dtype=np.float32)
 
             return {
                 "vertices": vertices.tobytes(),
@@ -412,6 +454,8 @@ class ReconstructionServer:
 
         except Exception as e:
             logger.error(f"Mesh extraction failed: {e}")
+            import traceback
+            traceback.print_exc()
             return None
 
     async def _handle_get_mesh(self, websocket, session: ClientSession):
@@ -454,7 +498,30 @@ class ReconstructionServer:
             # Step 1: Extract current mesh
             with session.lock:
                 if self.use_gpu:
-                    mesh = session.volume.extract_triangle_mesh().to_legacy()
+                    # Try GPU first, fall back to CPU if memory issues
+                    try:
+                        t_mesh = session.volume.extract_triangle_mesh()
+                    except RuntimeError as e:
+                        if "Unable to allocate" in str(e):
+                            logger.warning(f"[{session.client_id}] GPU mesh extraction failed, using CPU")
+                            cpu_volume = session.volume.cpu()
+                            t_mesh = cpu_volume.extract_triangle_mesh()
+                        else:
+                            raise
+                    
+                    # Check if we have geometry
+                    if not hasattr(t_mesh.vertex, 'positions') or t_mesh.vertex.positions.shape[0] == 0:
+                        await websocket.send(msgpack.packb({
+                            "type": "checkpoint_ack",
+                            "success": False,
+                            "error": "No geometry to checkpoint"
+                        }))
+                        return
+                    
+                    # Convert to legacy mesh for processing (without colors)
+                    mesh = o3d.geometry.TriangleMesh()
+                    mesh.vertices = o3d.utility.Vector3dVector(t_mesh.vertex.positions.cpu().numpy())
+                    mesh.triangles = o3d.utility.Vector3iVector(t_mesh.triangle.indices.cpu().numpy())
                 else:
                     mesh = session.volume.extract_triangle_mesh()
             
