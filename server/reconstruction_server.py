@@ -227,10 +227,46 @@ class ReconstructionServer:
             }))
             return
 
+        # Calculate actual dimensions from data size
+        num_pixels = len(depth_bytes) // 2  # uint16 = 2 bytes
+        
+        # Try to infer dimensions - common ToF resolutions
+        possible_dims = [
+            (480, 240), (240, 480),  # 115200 pixels - S20 Ultra ToF
+            (640, 480), (480, 640),  # 307200 pixels
+            (320, 240), (240, 320),  # 76800 pixels - common VGA quarter
+            (256, 192), (192, 256),  # 49152 pixels
+            (240, 180), (180, 240),  # 43200 pixels - P30 Pro ToF
+            (224, 172), (172, 224),  # 38528 pixels
+        ]
+        
+        width, height = session.intrinsics.width, session.intrinsics.height
+        if width * height != num_pixels:
+            # Find matching dimensions
+            for w, h in possible_dims:
+                if w * h == num_pixels:
+                    width, height = w, h
+                    # Update session intrinsics for future frames
+                    if session.intrinsics.width != width or session.intrinsics.height != height:
+                        logger.info(f"[{session.client_id}] Updated depth dims: {width}x{height}")
+                        session.intrinsics.width = width
+                        session.intrinsics.height = height
+                        # Scale fx/fy proportionally
+                        session.intrinsics.cx = width / 2.0
+                        session.intrinsics.cy = height / 2.0
+                    break
+            else:
+                logger.warning(f"[{session.client_id}] Unknown depth size: {num_pixels} pixels")
+                session.frame_count += 1
+                await websocket.send(msgpack.packb({
+                    "type": "frame_ack", 
+                    "frame_id": session.frame_count,
+                    "timestamp": timestamp
+                }))
+                return
+
         # Convert depth (uint16 mm -> appropriate format)
-        depth_np = np.frombuffer(depth_bytes, dtype=np.uint16).reshape(
-            session.intrinsics.height, session.intrinsics.width
-        )
+        depth_np = np.frombuffer(depth_bytes, dtype=np.uint16).reshape(height, width)
         
         # Convert pose
         pose = np.array(pose_data, dtype=np.float64).reshape(4, 4)

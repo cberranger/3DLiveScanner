@@ -10,13 +10,15 @@ import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessageUnpacker;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import net.jpountz.lz4.LZ4Compressor;
-import net.jpountz.lz4.LZ4Factory;
+import net.jpountz.lz4.LZ4FrameInputStream;
+import net.jpountz.lz4.LZ4FrameOutputStream;
 
 /**
  * Client for streaming depth frames to reconstruction server.
@@ -51,17 +53,18 @@ public class ServerStreamClient {
     private final AtomicBoolean initialized = new AtomicBoolean(false);
     private final AtomicInteger pendingFrames = new AtomicInteger(0);
     
-    private final LZ4Compressor compressor;
-    private static final int MAX_PENDING_FRAMES = 3;  // Reduced for smoother streaming
+    private static final int MAX_PENDING_FRAMES = 2;  // Tight backpressure for smoothness
     
-    // Frame rate limiting
+    // Frame rate limiting - adaptive
     private long lastFrameTime = 0;
     private static final long MIN_FRAME_INTERVAL_MS = 100;  // Max 10 FPS to server
     private int frameSkipCount = 0;
     
+    // Compression enabled
+    private static final boolean USE_COMPRESSION = true;
+    
     public ServerStreamClient(String serverUrl) {
         this.serverUrl = serverUrl;
-        this.compressor = LZ4Factory.fastestInstance().fastCompressor();
     }
     
     public void setListener(Listener listener) {
@@ -260,12 +263,23 @@ public class ServerStreamClient {
                 byte[] data = packer.toByteArray();
                 packer.close();
                 
-                // Send uncompressed for now (LZ4 format mismatch with Python)
-                webSocket.send(data);
+                // Compress with LZ4 frame format (compatible with Python lz4.frame)
+                byte[] toSend;
+                if (USE_COMPRESSION && data.length > 1000) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    LZ4FrameOutputStream lz4Out = new LZ4FrameOutputStream(baos);
+                    lz4Out.write(data);
+                    lz4Out.close();
+                    toSend = baos.toByteArray();
+                } else {
+                    toSend = data;
+                }
+                
+                webSocket.send(toSend);
                 
             } catch (Exception e) {
                 Log.e(TAG, "Send frame failed", e);
-                pendingFrames.decrementAndGet();
+                pendingFrames.decrementAndGet();  // Only decrement on error, ack decrements on success
             }
         });
     }
@@ -313,10 +327,20 @@ public class ServerStreamClient {
             byte[] data = new byte[buffer.remaining()];
             buffer.get(data);
             
-            // Check for LZ4 compression (magic bytes)
-            if (data.length > 4 && data[0] == 0x04 && data[1] == 0x22) {
-                // Decompress - would need LZ4 decompressor here
-                // For now, assume uncompressed responses
+            // Check for LZ4 frame compression (magic bytes: 0x04 0x22 0x4D 0x18)
+            if (data.length > 4 && data[0] == 0x04 && data[1] == 0x22 && 
+                data[2] == 0x4D && data[3] == 0x18) {
+                // Decompress LZ4 frame
+                ByteArrayInputStream bais = new ByteArrayInputStream(data);
+                LZ4FrameInputStream lz4In = new LZ4FrameInputStream(bais);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                byte[] buf = new byte[8192];
+                int len;
+                while ((len = lz4In.read(buf)) != -1) {
+                    baos.write(buf, 0, len);
+                }
+                lz4In.close();
+                data = baos.toByteArray();
             }
             
             MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(data);
