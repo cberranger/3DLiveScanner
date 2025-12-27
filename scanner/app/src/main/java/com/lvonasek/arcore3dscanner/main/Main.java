@@ -105,6 +105,14 @@ public class Main extends AbstractActivity implements View.OnClickListener,
   boolean mRecording = false;
   float mCameraRecordYaw = 0;
 
+  // Server streaming
+  private ServerStreamClient mServerClient;
+  private boolean mServerEnabled = false;
+  private boolean mServerInitialized = false;
+  private TextView mServerStatus;
+  private String mServerUrl;
+  private int mFramesSent = 0;
+
   int getARMode() {
     int mode = getBackend(this) * 3; //0 = GOOGLE_SFM, 3 = HUAWEI_SFM
     if (isFaceModeOn(this)) {
@@ -203,6 +211,14 @@ public class Main extends AbstractActivity implements View.OnClickListener,
     final File input = new File(Service.getLink(Main.this));
     final File obj = new File(getTempPath(), System.currentTimeMillis() + Exporter.EXT_OBJ);
 
+    // Initialize server streaming if enabled
+    mServerEnabled = pref.getBoolean(getString(R.string.pref_server_enabled), false);
+    if (mServerEnabled && !texturize) {
+      String serverUrl = pref.getString(getString(R.string.pref_server_url), "ws://192.168.1.10:8765");
+      Log.i(TAG, "Server URL from prefs: '" + serverUrl + "'");
+      initServerStreaming(serverUrl);
+    }
+
     if (m3drRunning) {
       runOnUiThread(() -> mHandMotionView.setVisibility(View.VISIBLE));
     }
@@ -284,6 +300,16 @@ public class Main extends AbstractActivity implements View.OnClickListener,
       findViewById(R.id.view_button).setVisibility(View.GONE);
       mToggleButton.setVisibility(View.GONE);
       mUndoButton.setVisibility(View.GONE);
+    }
+
+    // Server status indicator - tap to reconnect
+    mServerStatus = findViewById(R.id.server_status);
+    if (mServerStatus != null) {
+      mServerStatus.setOnClickListener(v -> {
+        if (mServerEnabled && (mServerClient == null || !mServerClient.isConnected())) {
+          reconnectServer();
+        }
+      });
     }
 
     CheckBox photoMode = findViewById(R.id.photo_mode);
@@ -554,6 +580,9 @@ public class Main extends AbstractActivity implements View.OnClickListener,
       mGPS.stop();
     }
 
+    //stop server streaming
+    stopServerStreaming();
+
     //do not do anything if returned from VR
     if (mIgnoreSaving) {
       mIgnoreSaving = false;
@@ -782,6 +811,11 @@ public class Main extends AbstractActivity implements View.OnClickListener,
     boolean grid = mShowGrid && !face && !mRecording;
     if (JNI.onGlSurfaceDrawFrame(face, Compass.getValue(), mViewCamera, mAnchors, grid, !mRecording)) {
       runOnUiThread(() -> mHandMotionView.setVisibility(View.GONE));
+      
+      // Stream frame to server if enabled and scanning
+      if (m3drRunning && mServerEnabled) {
+        streamFrameToServer();
+      }
     }
     if (JNI.didARjump()) {
       m3drRunning = false;
@@ -935,6 +969,104 @@ public class Main extends AbstractActivity implements View.OnClickListener,
         d.getWindow().setBackgroundDrawable(getDrawable(R.drawable.background_dialog));
         d.setOnDismissListener(dialog12 -> System.exit(0));
         d.show();
+      }
+    });
+  }
+
+  // === SERVER STREAMING METHODS ===
+
+  private void initServerStreaming(String serverUrl) {
+    mServerUrl = serverUrl;
+    mFramesSent = 0;
+    mServerClient = new ServerStreamClient(serverUrl);
+    mServerClient.setListener(new ServerStreamClient.Listener() {
+      @Override
+      public void onConnected() {
+        runOnUiThread(() -> updateServerStatus("Connected to " + mServerUrl));
+        // Initialize with depth intrinsics
+        float[] intrinsics = JNI.getDepthIntrinsics();
+        if (intrinsics != null && intrinsics.length >= 6) {
+          mServerClient.initialize(
+            (int) intrinsics[0], (int) intrinsics[1],  // width, height
+            intrinsics[2], intrinsics[3],              // fx, fy
+            intrinsics[4], intrinsics[5],              // cx, cy
+            5  // mesh every 5 frames
+          );
+          mServerInitialized = true;
+          runOnUiThread(() -> updateServerStatus("Ready: " + mServerUrl));
+        }
+      }
+
+      @Override
+      public void onDisconnected() {
+        mServerInitialized = false;
+        runOnUiThread(() -> updateServerStatus("Disconnected - tap to reconnect"));
+      }
+
+      @Override
+      public void onError(String message) {
+        Log.e(TAG, "Server error: " + message);
+        runOnUiThread(() -> updateServerStatus("Error: " + message));
+      }
+
+      @Override
+      public void onMeshReceived(byte[] vertices, byte[] triangles, byte[] normals,
+                                 int vertexCount, int triangleCount) {
+        Log.i(TAG, "Received mesh: " + vertexCount + " vertices, " + triangleCount + " triangles");
+        runOnUiThread(() -> updateServerStatus("Mesh: " + vertexCount + " verts"));
+      }
+
+      @Override
+      public void onFrameAck(int frameId) {
+        if (frameId % 10 == 0) {
+          runOnUiThread(() -> updateServerStatus("Streaming: " + frameId + " frames"));
+        }
+      }
+    });
+
+    runOnUiThread(() -> updateServerStatus("Connecting to " + serverUrl + "..."));
+    mServerClient.connect();
+  }
+
+  private void updateServerStatus(String message) {
+    if (mServerStatus != null) {
+      mServerStatus.setText(message);
+      mServerStatus.setVisibility(View.VISIBLE);
+    }
+  }
+
+  private void reconnectServer() {
+    if (mServerUrl != null && mServerEnabled) {
+      stopServerStreaming();
+      mServerEnabled = true;
+      initServerStreaming(mServerUrl);
+    }
+  }
+
+  private void streamFrameToServer() {
+    if (!mServerEnabled || !mServerInitialized || mServerClient == null) return;
+    if (!mServerClient.isConnected()) return;
+
+    short[] depthData = JNI.getDepthData();
+    float[] pose = JNI.getCameraPose();
+    double timestamp = JNI.getFrameTimestamp();
+
+    if (pose != null) {
+      mServerClient.sendFrame(depthData, pose, timestamp);
+      mFramesSent++;
+    }
+  }
+
+  private void stopServerStreaming() {
+    if (mServerClient != null) {
+      mServerClient.disconnect();
+      mServerClient = null;
+    }
+    mServerInitialized = false;
+    mServerEnabled = false;
+    runOnUiThread(() -> {
+      if (mServerStatus != null) {
+        mServerStatus.setVisibility(View.GONE);
       }
     });
   }
