@@ -75,9 +75,14 @@ namespace oc {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rWidth, rHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
         /// create render buffer for depth buffer
+        /// Use 24-bit depth for better precision (ES 3.2 feature)
+        /// This reduces z-fighting artifacts significantly
         glGenRenderbuffers(1, rboID);
         glBindRenderbuffer(GL_RENDERBUFFER, rboID[0]);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, rWidth, rHeight);
+        
+        // Use GL_DEPTH_COMPONENT24 for 24-bit depth (better precision than 16-bit)
+        // Available in OpenGL ES 3.0+ which both P30 Pro and S20 Ultra support
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, rWidth, rHeight);
 
         //framebuffers
         glGenFramebuffers(1, fboID);
@@ -86,8 +91,17 @@ namespace oc {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboID[0]);
 
         /// check FBO status
-        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            exit(EXIT_SUCCESS);
+        GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if(status != GL_FRAMEBUFFER_COMPLETE) {
+            LOGE("Framebuffer incomplete: 0x%x", status);
+            // Fallback to 16-bit depth if 24-bit fails
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, rWidth, rHeight);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboID[0]);
+            if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+                LOGE("Framebuffer still incomplete after fallback!");
+                exit(EXIT_SUCCESS);
+            }
+        }
 
         //set viewport
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -1,5 +1,6 @@
 package com.lvonasek.arcore3dscanner.ui;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -12,6 +13,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.lvonasek.arcore3dscanner.R;
+
+import java.util.Objects;
 
 public class Settings extends PreferenceActivity {
   @Override
@@ -85,6 +88,7 @@ public class Settings extends PreferenceActivity {
     return Color.argb(255, 48, 48, 48);
   }
 
+  @SuppressLint("UseCompatLoadingForDrawables")
   protected void setStyle(Window window) {
     int lFlags = window.getDecorView().getSystemUiVisibility();
     window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -101,7 +105,7 @@ public class Settings extends PreferenceActivity {
 
   protected Preference.OnPreferenceClickListener fixBackground = preference -> {
     PreferenceScreen a = (PreferenceScreen) preference;
-    setStyle(a.getDialog().getWindow());
+    setStyle(Objects.requireNonNull(a.getDialog().getWindow()));
     return false;
   };
 }

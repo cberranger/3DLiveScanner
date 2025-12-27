@@ -1,6 +1,7 @@
 package com.lvonasek.arcore3dscanner.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -38,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 public class FileManager extends AbstractActivity implements View.OnClickListener {
   private FileAdapter mAdapter;
@@ -99,7 +101,7 @@ public class FileManager extends AbstractActivity implements View.OnClickListene
   public void onBackPressed()
   {
     if (mProgress.getVisibility() == View.VISIBLE) {
-      System.exit(0);
+      finish();
     } else if (mAdapter.hasParent()) {
       mAdapter.toParent();
     } else if (mAdapter.getSelected() != null) {
@@ -178,6 +180,7 @@ public class FileManager extends AbstractActivity implements View.OnClickListene
       setupPermissions();
   }
 
+  @SuppressLint("UseCompatLoadingForDrawables")
   public void refreshUI()
   {
     String link = "https://lvonasek.github.io/policy-3dls.html";
@@ -219,7 +222,7 @@ public class FileManager extends AbstractActivity implements View.OnClickListene
       dialog.setView(view);
 
       d = dialog.create();
-      d.getWindow().setBackgroundDrawable(getDrawable(R.drawable.background_dialog));
+      Objects.requireNonNull(d.getWindow()).setBackgroundDrawable(getDrawable(R.drawable.background_dialog));
       d.show();
 
       if (!Compatibility.isGoogleDepthSupported(this) && !Compatibility.hasToFSensor(this)) {
@@ -381,19 +384,20 @@ public class FileManager extends AbstractActivity implements View.OnClickListene
       }
     } else if (id == R.id.service_cancel) {
       Service.reset(this);
-      System.exit(0);
+      finish();
     } else if (id == R.id.settings) {
       startActivity(new Intent(this, Settings.class));
     }
   }
 
 
+  @SuppressLint("UseCompatLoadingForDrawables")
   private void startScanning()
   {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setView(R.layout.dialog_scan);
     Dialog dialog = builder.create();
-    dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.background_dialog));
+    Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(getDrawable(R.drawable.background_dialog));
     dialog.show();
 
     ArrayList<Drawable> icons = new ArrayList<>();

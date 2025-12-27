@@ -11,10 +11,19 @@ import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL;
 
+/**
+ * EGL Helper for OpenGL ES 3.2 context creation
+ * 
+ * Creates an ES 3.2 context for modern OpenGL features:
+ * - VAO, UBO, Compute Shaders
+ * - Falls back to ES 2.0 if 3.2 is unavailable
+ */
 class EGLHelper
 {
+  private static final String TAG = "EGLHelper";
   private static final int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
   private static EGLContext lastContext = null;
+  private static int lastContextVersion = 0;
 
   private WeakReference<GLESSurfaceView>         mGLESSurfaceViewWeakRef;
   private EGL10                                  mEgl;
@@ -22,6 +31,7 @@ class EGLHelper
   private EGLSurface                             mEglSurface;
   private EGLConfig                              mEglConfig;
   private EGLContext                             mEglContext;
+  private EGLConfigChooser                       mConfigChooser;
 
   EGLHelper(WeakReference<GLESSurfaceView> GLESSurfaceViewWeakRef)
   {
@@ -38,6 +48,9 @@ class EGLHelper
     int[] version = new int[2];
     if (!mEgl.eglInitialize(mEglDisplay, version))
       throw new RuntimeException("eglInitialize failed");
+    
+    Log.i(TAG, "EGL version: " + version[0] + "." + version[1]);
+    
     GLESSurfaceView view = mGLESSurfaceViewWeakRef.get();
     if (view == null)
     {
@@ -45,18 +58,42 @@ class EGLHelper
       mEglContext = null;
     } else
     {
-      mEglConfig = new EGLConfigChooser(8, 8, 8, 8, 16, 8).chooseConfig(mEgl, mEglDisplay);
-      if (lastContext == null)
+      // Request ES 3.2 with 24-bit depth
+      mConfigChooser = new EGLConfigChooser(8, 8, 8, 8, 24, 8);
+      mEglConfig = mConfigChooser.chooseConfig(mEgl, mEglDisplay);
+      
+      int contextVersion = mConfigChooser.getContextClientVersion();
+      
+      // Create context with appropriate version
+      if (lastContext == null || lastContextVersion != contextVersion)
       {
-        int[] att = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE };
-        lastContext = mEgl.eglCreateContext(mEglDisplay, mEglConfig, EGL10.EGL_NO_CONTEXT, att);
+        // Try ES 3.2 first
+        if (contextVersion >= 3) {
+          int[] att32 = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL10.EGL_NONE };
+          lastContext = mEgl.eglCreateContext(mEglDisplay, mEglConfig, EGL10.EGL_NO_CONTEXT, att32);
+          
+          if (lastContext != null && lastContext != EGL10.EGL_NO_CONTEXT) {
+            lastContextVersion = 3;
+            Log.i(TAG, "Created OpenGL ES 3.x context");
+          } else {
+            // Fallback to ES 2.0
+            int[] att20 = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE };
+            lastContext = mEgl.eglCreateContext(mEglDisplay, mEglConfig, EGL10.EGL_NO_CONTEXT, att20);
+            lastContextVersion = 2;
+            Log.i(TAG, "Fallback to OpenGL ES 2.0 context");
+          }
+        } else {
+          int[] att = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE };
+          lastContext = mEgl.eglCreateContext(mEglDisplay, mEglConfig, EGL10.EGL_NO_CONTEXT, att);
+          lastContextVersion = 2;
+        }
       }
       mEglContext = lastContext;
     }
     if (mEglContext == null || mEglContext == EGL10.EGL_NO_CONTEXT)
     {
       mEglContext = null;
-      throw new RuntimeException("createContext");
+      throw new RuntimeException("createContext failed");
     }
     mEglSurface = null;
   }
@@ -88,7 +125,7 @@ class EGLHelper
     if (mEglSurface == null || mEglSurface == EGL10.EGL_NO_SURFACE)
     {
       if (mEgl.eglGetError() == EGL10.EGL_BAD_NATIVE_WINDOW)
-        Log.e("EglHelper", "createWindowSurface returned EGL_BAD_NATIVE_WINDOW.");
+        Log.e(TAG, "createWindowSurface returned EGL_BAD_NATIVE_WINDOW.");
       return false;
     }
     return mEgl.eglMakeCurrent(mEglDisplay, mEglSurface, mEglSurface, mEglContext);
@@ -97,6 +134,15 @@ class EGLHelper
   GL createGL()
   {
     return mEglContext.getGL();
+  }
+  
+  /**
+   * Get the OpenGL ES version being used
+   * @return 3 for ES 3.x, 2 for ES 2.0
+   */
+  public int getContextVersion()
+  {
+    return lastContextVersion;
   }
 
   int swap()

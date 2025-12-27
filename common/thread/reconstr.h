@@ -51,7 +51,7 @@ namespace oc {
         std::mutex binder_mutex_;
         std::mutex render_mutex_;
         std::mutex event_mutex_;
-        pthread_t threadId;
+        // Note: threadId removed - now using GlobalThreadPool from thread_pool.h
         //frame data
         clock_t start;
         glm::mat4 frame_calibration;

@@ -1,5 +1,6 @@
 package com.lvonasek.arcore3dscanner.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ class FolderAdapter extends BaseAdapter
     return i;
   }
 
+  @SuppressLint("UseCompatLoadingForDrawables")
   @Override
   public View getView(final int index, View view, ViewGroup viewGroup)
   {

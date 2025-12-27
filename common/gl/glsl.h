@@ -42,6 +42,11 @@ namespace oc {
         static std::string GetError();
 
         unsigned int GetId() { return id; }
+        
+        /**
+         * @brief Get the VAO ID (0 if not using ES 3.2)
+         */
+        unsigned int GetVAO() { return vao_; }
 
         /**
          * @brief initShader creates shader from code
@@ -96,9 +101,20 @@ namespace oc {
         static GLuint Image2GLTexture(Image* img);
 
     private:
+        /**
+         * @brief Convert ES 2.0 vertex shader to ES 3.2
+         */
+        static std::string ConvertToES32Vertex(const std::string& src);
+        
+        /**
+         * @brief Convert ES 2.0 fragment shader to ES 3.2
+         */
+        static std::string ConvertToES32Fragment(const std::string& src);
+
         unsigned int id;          ///< Shader id
         unsigned int shader_vp;   ///< Vertex shader
         unsigned int shader_fp;   ///< Fragment shader
+        unsigned int vao_;        ///< Vertex Array Object (ES 3.2)
         int attribute_v_vertex;   ///< Pointer to vertices on GPU
         int attribute_v_coord;    ///< Pointer to coords on GPU
         int attribute_v_normal;   ///< Pointer to normals on GPU

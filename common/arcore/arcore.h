@@ -7,6 +7,8 @@
 #include <data/image.h>
 #include <data/mesh.h>
 #include <gl/renderer.h>
+#include <gl/compute_shader.h>
+#include <depth/temporal_filter.h>
 
 namespace oc {
 
@@ -55,6 +57,13 @@ namespace oc {
         void SetOffset(float value) { offset = value; }
 
         void SetResolution(float res) { resolution = res; }
+        
+        void SetTemporalFilterEnabled(bool enabled) { useTemporalFilter = enabled; }
+        
+        void SetGPUProcessingEnabled(bool enabled) { useGPUProcessing = enabled; }
+        
+        // Initialize GPU processing (call after GL context is ready)
+        void InitializeGPU();
 
         Image* GetDepthMap(bool confidence, bool increasing, int s = 1);
 
@@ -71,6 +80,9 @@ namespace oc {
         void UpdateFace(glm::mat4 matrix);
 
         void UpdateFeaturePoints();
+        
+        // GPU-accelerated depth processing
+        void ProcessDepthGPU(float* depthData, int width, int height);
 
         std::map<id3d, ArAnchor*> ar_anchor_list;
         ArSession *ar_session_ = nullptr;
@@ -93,9 +105,20 @@ namespace oc {
         bool texture_initialized_ = false;
         bool useDepth;
         bool useDepthRaw;
+        bool useTemporalFilter = true;
+        bool useGPUProcessing = true;  // Enable GPU processing by default
         int viewportWidth;
         int viewportHeight;
         int64_t lastDepthTimestamp;
+        
+        // Temporal depth filter for noise reduction
+        depth::TemporalDepthFilter temporalFilter;
+        
+        // GPU depth processor
+        gl::GPUDepthProcessor gpuDepthProcessor;
+        bool gpuInitialized = false;
+        GLuint gpuDepthTexInput = 0;
+        GLuint gpuDepthTexOutput = 0;
     };
 }
 

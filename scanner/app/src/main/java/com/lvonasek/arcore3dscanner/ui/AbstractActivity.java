@@ -22,6 +22,7 @@ import com.lvonasek.arcore3dscanner.main.Exporter;
 import com.lvonasek.utils.Compass;
 import com.lvonasek.utils.Compatibility;
 import com.lvonasek.utils.IO;
+import com.lvonasek.arcore3dscanner.utils.AppExecutors;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -221,6 +222,8 @@ public abstract class AbstractActivity extends Activity {
   protected void onPause() {
     mCompass.onPause();
     super.onPause();
+    // Note: Do NOT shutdown AppExecutors here - they should persist across activity lifecycle
+    // Shutting down on pause causes RejectedExecutionException on resume
   }
 
   @Override
@@ -316,7 +319,7 @@ public abstract class AbstractActivity extends Activity {
       e.printStackTrace();
     }
 
-    if (migrate) {
+      if (migrate) {
       synchronized (migrationActive) {
         migrationActive.set(true);
       }
@@ -324,9 +327,6 @@ public abstract class AbstractActivity extends Activity {
       migrate(newdir, dir);
       synchronized (migrationActive) {
         migrationActive.set(false);
-        if (restartApp.get()) {
-          System.exit(0);
-        }
       }
     }
     return dir;

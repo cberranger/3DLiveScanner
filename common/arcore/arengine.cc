@@ -11,6 +11,8 @@ namespace oc {
         useDepth = depthCamera;
         face_mode_ = faceMode;
         has_coordinate_system_ = false;
+        ar_session_ = nullptr;
+        ar_frame_ = nullptr;
 
         if (env && context) {
             HwArEnginesSelector_checkAllAvailableEngines(env, context);
@@ -25,7 +27,12 @@ namespace oc {
                 }
             }
 
-            HwArSession_create(env, context, &ar_session_);
+            if (HwArSession_create(env, context, &ar_session_) != HWAR_SUCCESS || ar_session_ == nullptr) {
+                LOGE("AREngine session creation failed");
+                ar_session_ = nullptr;
+                return;
+            }
+
             HwArConfig *ar_config = nullptr;
             HwArConfig_create(ar_session_, &ar_config);
             HwArConfig_setCameraLensFacing(ar_session_, ar_config, faceMode ? HWAR_CAMERA_FACING_FRONT : HWAR_CAMERA_FACING_REAR);
@@ -56,11 +63,18 @@ namespace oc {
     }
 
     AREngine::~AREngine() {
-        HwArSession_destroy(ar_session_);
-        HwArFrame_destroy(ar_frame_);
+        if (ar_frame_) {
+            HwArFrame_destroy(ar_frame_);
+            ar_frame_ = nullptr;
+        }
+        if (ar_session_) {
+            HwArSession_destroy(ar_session_);
+            ar_session_ = nullptr;
+        }
     }
 
     void AREngine::Clear(bool detach) {
+        if (!ar_session_) return;
         if (detach) {
             for (auto& anchor : ar_anchor_list) {
                 HwArAnchor_detach(ar_session_, ar_anchor_list[anchor.first]);
@@ -72,11 +86,15 @@ namespace oc {
     }
 
     void AREngine::OnPause() {
-        HwArSession_pause(ar_session_);
+        if (ar_session_) {
+            HwArSession_pause(ar_session_);
+        }
     }
 
     void AREngine::OnResume() {
-        HwArSession_resume(ar_session_);
+        if (ar_session_) {
+            HwArSession_resume(ar_session_);
+        }
         camera.InitializeGlContent();
         texture_initialized_ = false;
     }
@@ -84,7 +102,9 @@ namespace oc {
     void AREngine::OnDisplayGeometryChanged(int display_rotation, int width, int height) {
         viewportWidth = width;
         viewportHeight = height;
-        HwArSession_setDisplayGeometry(ar_session_, display_rotation, width, height);
+        if (ar_session_) {
+            HwArSession_setDisplayGeometry(ar_session_, display_rotation, width, height);
+        }
     }
 
     void AREngine::Configure(void *session, void *frame) {
@@ -93,8 +113,9 @@ namespace oc {
     }
 
     float AREngine::CountFrameError() {
+        if (!ar_session_ || !ar_frame_) return 10000.0f;
         int size = 0;
-        float error = 10000;
+        float error = 10000.0f;
         float data[7] = {0, 0, 0, 1, 0, 0, 0};
         HwArPose *ar_pose;
         HwArPose_create(ar_session_, data, &ar_pose);
@@ -109,7 +130,7 @@ namespace oc {
             point /= fabs(point.z * point.w);
             point = 0.5f * point + 0.5f;
 
-            HwArFrame_hitTest(ar_session_, ar_frame_, viewportWidth * point.x, viewportHeight * point.y, hits);
+            HwArFrame_hitTest(ar_session_, ar_frame_, (float)viewportWidth * point.x, (float)viewportHeight * point.y, hits);
             HwArHitResultList_getSize(ar_session_, hits, &size);
             for (int i = 0; i < size; i++) {
                 HwArTrackable *trackable = 0;
@@ -133,6 +154,7 @@ namespace oc {
     }
 
     bool AREngine::Process(bool update) {
+        if (!ar_session_ || !ar_frame_) return false;
         if (update) {
             if (!texture_initialized_) {
                 HwArSession_setCameraTextureName(ar_session_, camera.GetTextureName());
@@ -162,6 +184,7 @@ namespace oc {
     }
 
     void AREngine::RenderCamera(ARCoreCamera::Effect effect, int scale) {
+        if (!ar_session_ || !ar_frame_) return;
         if (effect >= ARCoreCamera::DEPTH) {
             Image* img = 0;
             if (effect == ARCoreCamera::NIGHTVISION)
@@ -186,10 +209,11 @@ namespace oc {
     }
 
     std::vector<glm::vec3> AREngine::GetActiveAnchors() {
+        std::vector<glm::vec3> output;
+        if (!ar_session_) return output;
         float data[7] = {0, 0, 0, 1, 0, 0, 0};
         HwArPose *ar_pose;
         HwArPose_create(ar_session_, data, &ar_pose);
-        std::vector<glm::vec3> output;
 
         for (auto& anchor : ar_anchor_list) {
             HwArTrackingState state = HWAR_TRACKING_STATE_STOPPED;
@@ -206,6 +230,11 @@ namespace oc {
     }
 
     std::vector<float> AREngine::GetDistortion() {
+        std::vector<float> output;
+        if (!ar_session_ || !ar_frame_) {
+            for (int i = 0; i < 5; i++) output.push_back(0.0f);
+            return output;
+        }
         HwArCamera *ar_camera;
         HwArCameraIntrinsics* intrinsics;
         float distortion[DISTORTION_COUNT];
@@ -216,7 +245,6 @@ namespace oc {
         HwArCameraIntrinsics_destroy(ar_session_, intrinsics);
         HwArCamera_release(ar_camera);
 
-        std::vector<float> output;
         output.push_back(distortion[0]);
         output.push_back(distortion[1]);
         output.push_back(distortion[3]);
@@ -226,6 +254,7 @@ namespace oc {
     }
 
     glm::vec3 AREngine::HitTest(int x, int y) {
+        if (!ar_session_ || !ar_frame_) return glm::vec3(1000000.0f);
         float data[7] = {0, 0, 0, 1, 0, 0, 0};
         HwArPose *ar_pose;
         HwArPose_create(ar_session_, data, &ar_pose);
@@ -235,7 +264,7 @@ namespace oc {
         HwArHitResultList* hits = 0;
         HwArHitResult_create(ar_session_, &hit);
         HwArHitResultList_create(ar_session_, &hits);
-        HwArFrame_hitTest(ar_session_, ar_frame_, x, y, hits);
+        HwArFrame_hitTest(ar_session_, ar_frame_, (float)x, (float)y, hits);
         HwArHitResultList_getSize(ar_session_, hits, &size);
         if (size > 0) {
             HwArTrackable* trackable = 0;
@@ -252,18 +281,20 @@ namespace oc {
         HwArHitResultList_destroy(hits);
         HwArHitResult_destroy(hit);
         HwArPose_destroy(ar_pose);
-        return glm::vec3(INT_MAX);
+        return glm::vec3(1000000.0f);
     }
 
     Image* AREngine::GetDepthMap(bool confidence, bool increasing, int s) {
 
-        if (useDepth) {
+        if (ar_session_ && ar_frame_ && useDepth) {
             HwArImage* image = 0;
             if (HwArFrame_acquireDepthImage(ar_session_, ar_frame_, &image) == HWAR_SUCCESS) {
 
                 //get depth data
                 const AImage *depthMap = 0;
                 HwArImage_getNdkImage(image, &depthMap);
+                if (!depthMap) { HwArImage_release(image); return 0; }
+
                 uint16_t *imgData;
                 int dataLength;
                 int32_t depthWidth = 0, depthHeight = 0, stride = 0;
@@ -298,6 +329,7 @@ namespace oc {
     }
 
     bool AREngine::UpdateAnchor() {
+        if (!ar_session_ || !ar_frame_) return false;
         if (!ar_anchor_list.empty() && GetActiveAnchors().empty()) {
             return false;
         }
@@ -375,6 +407,7 @@ namespace oc {
     }
 
     void AREngine::UpdateFace(glm::mat4 matrix) {
+        if (!ar_session_) return;
         face_mesh.vertices.clear();
         face_mesh.normals.clear();
         face_mesh.uv.clear();
@@ -474,6 +507,7 @@ namespace oc {
     }
 
     void AREngine::UpdateFeaturePoints() {
+        if (!ar_session_ || !ar_frame_) return;
         if (!UpdateAnchor()) {
             points.clear();
             return;
@@ -506,6 +540,8 @@ namespace oc {
                     //get depth data
                     const AImage *depthMap = 0;
                     HwArImage_getNdkImage(image, &depthMap);
+                    if (!depthMap) { HwArImage_release(image); return; }
+
                     uint16_t *imgData;
                     int dataLength;
                     int32_t depthWidth = 0, depthHeight = 0, stride = 0;

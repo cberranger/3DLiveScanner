@@ -1,4 +1,6 @@
 #include "data/dataset.h"
+#include <glm/gtc/type_ptr.hpp>
+#include "utils/async_writer.h"
 #include <sstream>
 
 namespace oc {
@@ -39,19 +41,40 @@ namespace oc {
 
     std::vector<glm::mat4> Dataset::ReadPose(int index) {
         std::vector<glm::mat4> output;
-        FILE* file = fopen(GetFileName(index, ".mat").c_str(), "r");
+        FILE* file = fopen(GetFileName(index, ".bin_pose").c_str(), "rb");
+        if (!file) {
+            file = fopen(GetFileName(index, ".mat").c_str(), "r");
+            for (int i = 0; i < MAX_CAMERA; i++) {
+                glm::mat4 mat(0);
+                for (int j = 0; j < 4; j++) {
+                    if (feof(file)) {
+                        break;
+                    }
+                    fscanf(file, "%f %f %f %f\n", &mat[j][0], &mat[j][1], &mat[j][2], &mat[j][3]);
+                }
+                output.push_back(mat);
+            }
+            fclose(file);
+            return output;
+        }
         for (int i = 0; i < MAX_CAMERA; i++) {
             glm::mat4 mat(0);
-            for (int j = 0; j < 4; j++) {
-                if (feof(file)) {
-                    break;
-                }
-                fscanf(file, "%f %f %f %f\n", &mat[j][0], &mat[j][1], &mat[j][2], &mat[j][3]);
+            if (fread(glm::value_ptr(mat), sizeof(glm::mat4), 1, file) == 1) {
+                output.push_back(mat);
             }
-            output.push_back(mat);
         }
         fclose(file);
         return output;
+    }
+
+    void Dataset::WritePose(int index, std::vector<glm::mat4> pose) {
+        FILE* file = fopen(GetFileName(index, ".bin_pose").c_str(), "wb");
+        if (file) {
+            for (size_t i = 0; i < pose.size(); i++) {
+                fwrite(glm::value_ptr(pose[i]), sizeof(glm::mat4), 1, file);
+            }
+            fclose(file);
+        }
     }
 
     void Dataset::ReadState(int &count, int &width, int &height, double& cx, double& cy, double& fx, double& fy) {
@@ -78,15 +101,6 @@ namespace oc {
         for (int i = 0; i < data.size(); i++) {
             fprintf(file, "%f\n", data[i]);
         }
-        fclose(file);
-    }
-
-    void Dataset::WritePose(int index, std::vector<glm::mat4> pose) {
-        FILE* file = fopen(GetFileName(index, ".mat").c_str(), "w");
-        for (int k = 0; k < MAX_CAMERA; k++)
-            for (int i = 0; i < 4; i++)
-                fprintf(file, "%f %f %f %f\n", pose[k][i][0], pose[k][i][1],
-                                               pose[k][i][2], pose[k][i][3]);
         fclose(file);
     }
 
@@ -119,10 +133,26 @@ namespace oc {
     }
 
     void Dataset::WritePointCloud(int index, Tango3DR_PointCloud t3dr_depth) {
-        FILE* file = fopen(GetFileName(index, ".pcl").c_str(), "wb");
-        fwrite(&t3dr_depth.num_points, sizeof(uint32_t), 1, file);
-        fwrite(t3dr_depth.points, sizeof(Tango3DR_Vector4), t3dr_depth.num_points, file);
-        fclose(file);
+        // Use async writer to avoid blocking the main thread
+        std::string filename = GetFileName(index, ".pcl");
+        
+        // Calculate total size needed
+        size_t headerSize = sizeof(uint32_t);
+        size_t dataSize = sizeof(Tango3DR_Vector4) * t3dr_depth.num_points;
+        size_t totalSize = headerSize + dataSize;
+        
+        // Build the buffer
+        std::vector<uint8_t> buffer(totalSize);
+        memcpy(buffer.data(), &t3dr_depth.num_points, headerSize);
+        memcpy(buffer.data() + headerSize, t3dr_depth.points, dataSize);
+        
+        // Queue for async write
+        WriteTask task;
+        task.filename = filename;
+        task.data = std::move(buffer);
+        task.binary = true;
+        
+        AsyncWriter::getInstance().write(std::move(task));
     }
 
     std::vector<std::pair<GridIndex, Tango3DR_Mesh *> > Dataset::ReadPreview(int index, bool empty) {
@@ -176,5 +206,9 @@ namespace oc {
             fwrite(p.second->faces, sizeof(Tango3DR_Face), p.second->num_faces, file);
         }
         fclose(file);
+    }
+    
+    void Dataset::FlushWrites() {
+        asyncFlush();
     }
 }

@@ -1,5 +1,6 @@
 package com.lvonasek.arcore3dscanner.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Scanner;
 
 class FileAdapter extends BaseAdapter
@@ -116,6 +118,7 @@ class FileAdapter extends BaseAdapter
     return i;
   }
 
+  @SuppressLint("UseCompatLoadingForDrawables")
   @Override
   public View getView(final int index, View view, ViewGroup viewGroup)
   {
@@ -276,12 +279,13 @@ class FileAdapter extends BaseAdapter
     return new File(mPath).getAbsolutePath();
   }
 
+  @SuppressLint("UseCompatLoadingForDrawables")
   private void startPostprocess(String key) {
 
     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
     builder.setView(R.layout.dialog_scan);
     Dialog dialog = builder.create();
-    dialog.getWindow().setBackgroundDrawable(mContext.getDrawable(R.drawable.background_dialog));
+    Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(mContext.getDrawable(R.drawable.background_dialog));
     dialog.show();
     ((TextView)dialog.findViewById(R.id.name)).setText(R.string.export);
 
@@ -402,6 +406,7 @@ class FileAdapter extends BaseAdapter
     }
   }
 
+  @SuppressLint("UseCompatLoadingForDrawables")
   public void deleteModel() {
     AlertDialog.Builder deleteDlg = new AlertDialog.Builder(mContext);
     deleteDlg.setTitle(mContext.getString(R.string.delete));
@@ -416,10 +421,11 @@ class FileAdapter extends BaseAdapter
     deleteDlg.setNegativeButton(mContext.getString(android.R.string.cancel), null);
 
     AlertDialog d = deleteDlg.create();
-    d.getWindow().setBackgroundDrawable(mContext.getDrawable(R.drawable.background_dialog));
+    Objects.requireNonNull(d.getWindow()).setBackgroundDrawable(mContext.getDrawable(R.drawable.background_dialog));
     d.show();
   }
 
+  @SuppressLint("UseCompatLoadingForDrawables")
   public void shareModel() {
     String key = (String)getItem(mSelected.get(0));
     if (key.length() <= 4) {
@@ -469,7 +475,7 @@ class FileAdapter extends BaseAdapter
         }).start();
       });
       AlertDialog d = dialog.create();
-      d.getWindow().setBackgroundDrawable(mContext.getDrawable(R.drawable.background_dialog));
+      Objects.requireNonNull(d.getWindow()).setBackgroundDrawable(mContext.getDrawable(R.drawable.background_dialog));
       d.show();
     }
   }

@@ -73,7 +73,7 @@ public class Service extends android.app.Service
     e.putInt(SERVICE_RUNNING, -Math.abs(getRunning(parent)));
     e.putString(SERVICE_LINK, link);
     e.commit();
-    System.exit(0);
+    // System.exit(0) removed - let Android lifecycle handle app termination
   }
 
   public static synchronized void forceState(AbstractActivity activity, String link, int state)
@@ -83,7 +83,10 @@ public class Service extends android.app.Service
     e.putInt(SERVICE_RUNNING, -Math.abs(state));
     e.putString(SERVICE_LINK, link);
     e.commit();
-    System.exit(0);
+    // System.exit(0) removed - let Android lifecycle handle app termination
+    if (activity != null) {
+      activity.finishAffinity();
+    }
   }
 
   public static synchronized void interrupt() {

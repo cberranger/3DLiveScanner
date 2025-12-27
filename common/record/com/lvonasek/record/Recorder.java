@@ -18,6 +18,7 @@ import android.media.MediaMuxer;
 import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -342,7 +343,10 @@ public class Recorder {
                 audioExtractor.setDataSource(mAudioFile.getAbsolutePath());
             }
 
-            MediaMuxer muxer = new MediaMuxer(file, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
+            MediaMuxer muxer = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                muxer = new MediaMuxer(file, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
+            }
 
             videoExtractor.selectTrack(0);
             MediaFormat videoFormat = videoExtractor.getTrackFormat(0);
@@ -385,7 +389,7 @@ public class Recorder {
                 else
                 {
                     videoBufferInfo.presentationTimeUs = videoExtractor.getSampleTime();
-                    videoBufferInfo.flags = videoExtractor.getSampleFlags();
+                    videoBufferInfo.flags = MediaCodec.BUFFER_FLAG_KEY_FRAME;
                     muxer.writeSampleData(videoTrack, videoBuf, videoBufferInfo);
                     videoExtractor.advance();
                 }
@@ -407,7 +411,7 @@ public class Recorder {
                     else
                     {
                         audioBufferInfo.presentationTimeUs = audioExtractor.getSampleTime();
-                        audioBufferInfo.flags = audioExtractor.getSampleFlags();
+                        audioBufferInfo.flags = MediaCodec.BUFFER_FLAG_KEY_FRAME;
                         muxer.writeSampleData(audioTrack, audioBuf, audioBufferInfo);
                         audioExtractor.advance();
                     }

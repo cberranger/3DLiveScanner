@@ -118,6 +118,31 @@ public class JNI
   // Indicate that the motion tracking jumped
   public static native boolean didARjump();
 
+  // === PAUSE/RESUME FEATURE ===
+  // Freeze current scan geometry (locked chunks won't be modified)
+  public static native void freezeScan();
+
+  // Get count of frozen chunks
+  public static native int getFrozenChunkCount();
+
+  // Unfreeze all geometry (allow full rescan)
+  public static native void unfreezeScan();
+  // === END PAUSE/RESUME ===
+  
+  // === SERVER STREAMING ===
+  // Get current depth frame data (returns null if not available)
+  public static native short[] getDepthData();
+  
+  // Get current camera pose (4x4 matrix, column-major)
+  public static native float[] getCameraPose();
+  
+  // Get depth camera intrinsics [width, height, fx, fy, cx, cy]
+  public static native float[] getDepthIntrinsics();
+  
+  // Get current frame timestamp
+  public static native double getFrameTimestamp();
+  // === END SERVER STREAMING ===
+
   public static String getEvent(Resources r)
   {
     String event = new String(getEvent());

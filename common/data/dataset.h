@@ -8,6 +8,9 @@
 
 namespace oc {
 
+    // Forward declaration for async flush
+    void asyncFlush();
+
     struct GridIndex {
         Tango3DR_GridIndex indices;
 
@@ -55,6 +58,9 @@ namespace oc {
         void WritePreview(int index, std::vector<std::pair<GridIndex, Tango3DR_Mesh*> > preview);
         void WriteState(int count, int width, int height, double cx, double cy, double fx, double fy);
         void WriteYaw(float yaw);
+        
+        // Flush all pending async writes (call before reading data or shutdown)
+        static void FlushWrites();
 
     private:
         std::string dataset;

@@ -55,7 +55,6 @@ public class Initializator extends AbstractActivity
         moveTaskToBack(true);
       } else {
         finish();
-        System.exit(0);
       }
     } else {
       closeOnResume = true;

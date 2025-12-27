@@ -512,7 +512,7 @@ namespace oc {
                 hasColors = true;
         }
         if (type == PLY) {
-            fprintf(file, "ply\nformat ascii 1.0\ncomment ---\n");
+            fprintf(file, "ply\nformat binary_little_endian 1.0\ncomment ---\n");
             fprintf(file, "element vertex %d\n", vertexCount);
             fprintf(file, "property float x\n");
             fprintf(file, "property float y\n");

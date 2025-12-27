@@ -14,7 +14,7 @@ import com.lvonasek.arcore3dscanner.R;
 
 /** This view contains the hand motion instructions with animation. */
 
-public class HandMotionView extends ImageView {
+public class HandMotionView extends androidx.appcompat.widget.AppCompatImageView {
 
   private static final long ANIMATION_SPEED_MS = 2500;
 

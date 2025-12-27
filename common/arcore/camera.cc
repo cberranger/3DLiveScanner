@@ -110,16 +110,19 @@ namespace oc {
     }
 
     void ARCoreCamera::DrawARCore(const ArSession *session, const ArFrame *frame, Effect effect, int w, int h) {
+        if (!session || !frame) return;
         InitARCore(session, frame);
         Draw(effect, w, h);
     }
 
     void ARCoreCamera::DrawAREngine(const HwArSession *session, const HwArFrame *frame, Effect effect, int w, int h) {
+        if (!session || !frame) return;
         InitAREngine(session, frame);
         Draw(effect, w, h);
     }
 
     void ARCoreCamera::InitARCore(const ArSession *session, const ArFrame *frame) {
+        if (!session || !frame) return;
         int32_t geometry_changed = 0;
         ArFrame_getDisplayGeometryChanged(session, frame, &geometry_changed);
         if (geometry_changed != 0 || !uvs_initialized_) {
@@ -134,6 +137,7 @@ namespace oc {
     }
 
     void ARCoreCamera::InitAREngine(const HwArSession *session, const HwArFrame *frame) {
+        if (!session || !frame) return;
         int32_t geometry_changed = 0;
         HwArFrame_getDisplayGeometryChanged(session, frame, &geometry_changed);
         if (geometry_changed != 0 || !uvs_initialized_) {

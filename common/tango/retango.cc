@@ -5,7 +5,7 @@
 
 namespace oc {
 
-    Retango::Retango() : finished(0), mask(0), rgb(0) {
+    Retango::Retango() : finished(0), mask(0), rgb(0), kdTreeValid_(false) {
         minDff = 0.1f;
         maxDst = 0.25f;
         resolution = 0.04f;
@@ -527,6 +527,9 @@ namespace oc {
             v.y /= fabs(v.z * v.w);
             converted.push_back(v);
         }
+        
+        // Build k-d tree for accelerated pair estimation
+        BuildKDTree();
     }
 
     void Retango::UpdateDelaunayEstimation(glm::mat4& pose) {
@@ -574,7 +577,89 @@ namespace oc {
         }
     }
 
+    void Retango::BuildKDTree() {
+        if (input.size() < 10) {
+            kdTreeValid_ = false;
+            return;
+        }
+        
+        // Build k-d tree from input points
+        kdTreeData_ = cv::Mat(input.size(), 3, CV_32F);
+        for (size_t i = 0; i < input.size(); i++) {
+            kdTreeData_.at<float>(i, 0) = input[i].x;
+            kdTreeData_.at<float>(i, 1) = input[i].y;
+            kdTreeData_.at<float>(i, 2) = input[i].z;
+        }
+        
+        // Create k-d tree index with 4 trees for good accuracy/speed tradeoff
+        cv::flann::KDTreeIndexParams indexParams(4);
+        kdTree_ = cv::makePtr<cv::flann::Index>(kdTreeData_, indexParams);
+        kdTreeValid_ = true;
+    }
+
+    void Retango::UpdatePairEstimationKDTree(glm::mat4 &pose) {
+        if (!kdTreeValid_ || input.size() < 10) {
+            // Fall back to original O(n²) for small point clouds
+            UpdatePairEstimation(pose);
+            return;
+        }
+        
+        glm::mat4 world2camera = glm::inverse(pose);
+        cv::flann::SearchParams searchParams(32);  // 32 checks for good accuracy
+        
+        // For each point, find neighbors within maxDst radius
+        for (unsigned int i = 0; i < input.size(); i++) {
+            glm::vec3 v = input[i];
+            
+            // Query point
+            cv::Mat query(1, 3, CV_32F);
+            query.at<float>(0, 0) = v.x;
+            query.at<float>(0, 1) = v.y;
+            query.at<float>(0, 2) = v.z;
+            
+            // Radius search - find all points within maxDst
+            std::vector<int> indices;
+            std::vector<float> dists;
+            float radiusSq = maxDst * maxDst;
+            
+            kdTree_->radiusSearch(query, indices, dists, radiusSq, 50, searchParams);
+            
+            for (size_t k = 0; k < indices.size(); k++) {
+                int j = indices[k];
+                if (j <= (int)i) continue;  // Avoid duplicate pairs
+                
+                glm::vec3 t = input[j];
+                
+                // Featureless floors: points at similar Y
+                if (fabs(t.y - v.y) < minDff) {
+                    if (!IsMasked(converted[i], converted[j])) {
+                        AddLine(v, t, world2camera);
+                    }
+                }
+                
+                // Extend wall pointcloud: points aligned in X and Z
+                if (fabs(t.x - v.x) < minDff && fabs(t.z - v.z) < minDff) {
+                    glm::vec3 diff = v - t;
+                    diff.y = 0;
+                    float dst = glm::length(diff);
+                    if (dst > resolution && dst < maxDst) {
+                        if (!IsMasked(converted[i], converted[j])) {
+                            AddLine(v, t, world2camera);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     void Retango::UpdatePairEstimation(glm::mat4 &pose) {
+        // Use k-d tree accelerated version for large point clouds
+        if (kdTreeValid_ && input.size() >= 100) {
+            UpdatePairEstimationKDTree(pose);
+            return;
+        }
+        
+        // Original O(n²) algorithm for small point clouds
         glm::mat4 world2camera = glm::inverse(pose);
         for (unsigned int i = 0; i < input.size(); i++) {
             glm::vec3 v = input[i];

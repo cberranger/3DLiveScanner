@@ -4,7 +4,15 @@ PROJECT_ROOT:= $(call my-dir)/../../../../..
 
 include $(CLEAR_VARS)
 LOCAL_MODULE           := lib3dscanner
+
+# Optimized compiler flags for ARM64 (Clang-compatible)
 LOCAL_CFLAGS           := -DCERES_FOUND=1
+LOCAL_CFLAGS           += -O3 -ffast-math
+LOCAL_CFLAGS           += -march=armv8-a+simd
+LOCAL_CFLAGS           += -mtune=cortex-a76
+LOCAL_CFLAGS           += -fvectorize -fslp-vectorize
+LOCAL_CFLAGS           += -DUSE_NEON=1
+
 LOCAL_SHARED_LIBRARIES := arcore arengine opencv_imgcodecs opencv_features2d opencv_core tango_3d_reconstruction
 LOCAL_STATIC_LIBRARIES := jpeg-turbo png poisson
 
@@ -14,7 +22,10 @@ LOCAL_C_INCLUDES := \
                     $(PROJECT_ROOT)/third_party/libjpeg-turbo/include/ \
                     $(PROJECT_ROOT)/third_party/libpng/include/ \
                     $(PROJECT_ROOT)/third_party/opencv/include/ \
-                    $(PROJECT_ROOT)/common/
+                    $(PROJECT_ROOT)/common/ \
+                    $(PROJECT_ROOT)/common/simd/ \
+                    $(PROJECT_ROOT)/common/depth/ \
+                    $(PROJECT_ROOT)/common/utils/
 
 LOCAL_SRC_FILES := ../../../../../common/arcore/arcore.cc \
                    ../../../../../common/arcore/arengine.cc \
@@ -46,7 +57,8 @@ LOCAL_SRC_FILES := ../../../../../common/arcore/arcore.cc \
                    app.cc \
                    renderer.cc
 
-LOCAL_LDLIBS    := -llog -lGLESv2 -L$(SYSROOT)/usr/lib -lz -landroid -lmediandk
+# Link flags - use GLESv3 for ES 3.2 features
+LOCAL_LDLIBS    := -llog -lGLESv3 -L$(SYSROOT)/usr/lib -lz -landroid -lmediandk
 LOCAL_DISABLE_FATAL_LINKER_WARNINGS := true
 
 

@@ -24,32 +24,36 @@ namespace oc {
     }
 
     void ARCoreService::Clear(bool detach) {
-        if (mode_ >= HUAWEI_SFM)
-            huawei->Clear(detach);
-        else
-            google->Clear(detach);
+        if (mode_ >= HUAWEI_SFM) {
+            if (huawei) huawei->Clear(detach);
+        } else {
+            if (google) google->Clear(detach);
+        }
         last_diff = -1;
     }
 
     void ARCoreService::OnPause() {
-        if (mode_ >= HUAWEI_SFM)
-            huawei->OnPause();
-        else
-            google->OnPause();
+        if (mode_ >= HUAWEI_SFM) {
+            if (huawei) huawei->OnPause();
+        } else {
+            if (google) google->OnPause();
+        }
     }
 
     void ARCoreService::OnResume() {
-        if (mode_ >= HUAWEI_SFM)
-            huawei->OnResume();
-        else
-            google->OnResume();
+        if (mode_ >= HUAWEI_SFM) {
+            if (huawei) huawei->OnResume();
+        } else {
+            if (google) google->OnResume();
+        }
     }
 
     void ARCoreService::OnDisplayGeometryChanged(int display_rotation, int width, int height, bool fullhd) {
-        if (mode_ >= HUAWEI_SFM)
-            huawei->OnDisplayGeometryChanged(display_rotation, width, height);
-        else
-            google->OnDisplayGeometryChanged(display_rotation, width, height);
+        if (mode_ >= HUAWEI_SFM) {
+            if (huawei) huawei->OnDisplayGeometryChanged(display_rotation, width, height);
+        } else {
+            if (google) google->OnDisplayGeometryChanged(display_rotation, width, height);
+        }
 
         glViewport(0, 0, width, height);
         int w = 360;
@@ -62,25 +66,30 @@ namespace oc {
     }
 
     void ARCoreService::Configure(void *session, void *frame) {
-        if (mode_ >= HUAWEI_SFM)
-            huawei->Configure(static_cast<HwArSession *>(session), static_cast<HwArFrame *>(frame));
-        else
-            google->Configure(static_cast<ArSession *>(session), static_cast<ArFrame *>(frame));
+        if (mode_ >= HUAWEI_SFM) {
+            if (huawei) huawei->Configure(static_cast<HwArSession *>(session), static_cast<HwArFrame *>(frame));
+        } else {
+            if (google) google->Configure(static_cast<ArSession *>(session), static_cast<ArFrame *>(frame));
+        }
     }
 
     float ARCoreService::CountFrameError() {
-        if (mode_ >= HUAWEI_SFM)
-            return huawei->CountFrameError();
-        else
-            return google->CountFrameError();
+        if (mode_ >= HUAWEI_SFM) {
+            if (huawei) return huawei->CountFrameError();
+            return 0.0f;
+        } else {
+            if (google) return google->CountFrameError();
+            return 0.0f;
+        }
     }
 
     bool ARCoreService::Process(bool update) {
         bool output;
-        if (mode_ >= HUAWEI_SFM)
-            output = huawei->Process(update);
-        else
-            output = google->Process(update);
+        if (mode_ >= HUAWEI_SFM) {
+            output = huawei ? huawei->Process(update) : false;
+        } else {
+            output = google ? google->Process(update) : false;
+        }
 
         if (output) {
             glm::mat4 matrix = GetPose()[COLOR_CAMERA];
@@ -101,24 +110,33 @@ namespace oc {
 
 
     std::vector<glm::vec3> ARCoreService::GetActiveAnchors() {
-        if (mode_ >= HUAWEI_SFM)
-            return huawei->GetActiveAnchors();
-        else
-            return google->GetActiveAnchors();
+        if (mode_ >= HUAWEI_SFM) {
+            if (huawei) return huawei->GetActiveAnchors();
+            return {};
+        } else {
+            if (google) return google->GetActiveAnchors();
+            return {};
+        }
     }
 
     std::vector<float> ARCoreService::GetDistortion() {
-        if (mode_ >= HUAWEI_SFM)
-            return huawei->GetDistortion();
-        else
-            return google->GetDistortion();
+        if (mode_ >= HUAWEI_SFM) {
+            if (huawei) return huawei->GetDistortion();
+            return {};
+        } else {
+            if (google) return google->GetDistortion();
+            return {};
+        }
     }
 
     Mesh ARCoreService::GetFace() {
-        if (mode_ >= HUAWEI_SFM)
-            return huawei->GetFace(GetProjection());
-        else
-            return google->GetFace(GetProjection() * glm::inverse(GetPose()[OPENGL_CAMERA]));
+        if (mode_ >= HUAWEI_SFM) {
+            if (huawei) return huawei->GetFace(GetProjection());
+            return Mesh();
+        } else {
+            if (google) return google->GetFace(GetProjection() * glm::inverse(GetPose()[OPENGL_CAMERA]));
+            return Mesh();
+        }
     }
 
     Image *ARCoreService::GetImage(ARCoreCamera::Effect effect) {

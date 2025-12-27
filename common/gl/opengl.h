@@ -2,7 +2,11 @@
 #define GL_OPENGL_H
 
 #ifdef ANDROID
-#include <GLES2/gl2.h>
+// Use OpenGL ES 3.2 for modern features (VAO, UBO, compute shaders, 24-bit depth)
+// Both Huawei P30 Pro and Samsung S20 Ultra fully support ES 3.2
+#include <GLES3/gl32.h>
+#include <GLES3/gl3ext.h>
+// Keep ES2 extensions for any legacy functionality
 #include <GLES2/gl2ext.h>
 #else
 #define GL_GLEXT_PROTOTYPES
@@ -38,5 +42,39 @@
 #define LOGE(...); \
   printf(__VA_ARGS__); printf("\n")
 #endif
+
+// OpenGL ES version detection helper
+namespace oc {
+namespace gl {
+    // Returns true if OpenGL ES 3.2 is available
+    // WARNING: Must be called AFTER OpenGL context is created!
+    inline bool supportsES32() {
+#ifdef ANDROID
+        // Check if we have a valid GL context first
+        // glGetString returns null if no context
+        const GLubyte* version = glGetString(GL_VERSION);
+        if (!version) {
+            return false;  // No GL context yet
+        }
+        
+        GLint major = 0, minor = 0;
+        glGetIntegerv(GL_MAJOR_VERSION, &major);
+        glGetIntegerv(GL_MINOR_VERSION, &minor);
+        return (major > 3) || (major == 3 && minor >= 2);
+#else
+        return true;  // Desktop GL assumed to support equivalent features
+#endif
+    }
+    
+    // Returns true if compute shaders are available
+    inline bool supportsComputeShaders() {
+#ifdef ANDROID
+        return supportsES32();
+#else
+        return true;
+#endif
+    }
+}
+}
 
 #endif

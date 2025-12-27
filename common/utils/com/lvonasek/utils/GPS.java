@@ -1,10 +1,13 @@
 package com.lvonasek.utils;
 
+import android.Manifest;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+
+import androidx.annotation.RequiresPermission;
 
 public class GPS implements LocationListener {
 
@@ -14,6 +17,7 @@ public class GPS implements LocationListener {
 
   private LocationManager locationManager;
 
+  @RequiresPermission(allOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
   public void start(Context context, int stopAfter) {
 
     count = stopAfter;

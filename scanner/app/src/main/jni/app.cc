@@ -411,6 +411,69 @@ namespace oc {
             reconstruction.paused = true;
         }
     }
+    
+    void App::FreezeScan() {
+        reconstruction.binder_mutex_.lock();
+        reconstruction.render_mutex_.lock();
+        reconstruction.scan.FreezeGeometry();
+        reconstruction.render_mutex_.unlock();
+        reconstruction.binder_mutex_.unlock();
+    }
+    
+    int App::GetFrozenChunkCount() {
+        return reconstruction.scan.GetFrozenCount();
+    }
+    
+    void App::UnfreezeScan() {
+        reconstruction.binder_mutex_.lock();
+        reconstruction.render_mutex_.lock();
+        reconstruction.scan.UnfreezeAll();
+        reconstruction.render_mutex_.unlock();
+        reconstruction.binder_mutex_.unlock();
+    }
+    
+    std::vector<uint16_t> App::GetDepthData() {
+        std::vector<uint16_t> result;
+        // Note: Full implementation requires storing depth buffer in ARCore/Reconstruction
+        // For now, return empty - server will just receive poses
+        // TODO: Hook into ARCore depth callback to capture raw depth
+        return result;
+    }
+    
+    std::vector<float> App::GetCameraPose() {
+        std::vector<float> result(16);
+        reconstruction.binder_mutex_.lock();
+        glm::mat4 view = reconstruction.frame_viewmat;
+        glm::mat4 pose = glm::inverse(view);
+        // Column-major for OpenGL
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                result[i * 4 + j] = pose[i][j];
+            }
+        }
+        reconstruction.binder_mutex_.unlock();
+        return result;
+    }
+    
+    std::vector<float> App::GetDepthIntrinsics() {
+        std::vector<float> result(6);
+        reconstruction.binder_mutex_.lock();
+        // Get from calibration matrix - use actual depth sensor dimensions
+        glm::mat4 calib = reconstruction.frame_calibration;
+        // Typical ToF sensor dimensions
+        result[0] = 240;  // width
+        result[1] = 180;  // height
+        result[2] = calib[0][0] * 240.0f / 1920.0f;  // fx scaled to depth res
+        result[3] = calib[1][1] * 180.0f / 1080.0f;  // fy scaled to depth res
+        result[4] = 120.0f;  // cx
+        result[5] = 90.0f;   // cy
+        reconstruction.binder_mutex_.unlock();
+        return result;
+    }
+    
+    double App::GetFrameTimestamp() {
+        return reconstruction.frame_timestamp;
+    }
 
     void App::Extract(std::string path, int mode) {
         reconstruction.binder_mutex_.lock();
@@ -1065,6 +1128,56 @@ JNIEXPORT jint JNICALL
 Java_com_lvonasek_arcore3dscanner_main_JNI_getScanSize(JNIEnv *env, jclass clazz) {
     return app.GetScanSize();
 }
+
+// === PAUSE/RESUME FEATURE ===
+JNIEXPORT void JNICALL
+Java_com_lvonasek_arcore3dscanner_main_JNI_freezeScan(JNIEnv *env, jclass clazz) {
+    app.FreezeScan();
+}
+
+JNIEXPORT jint JNICALL
+Java_com_lvonasek_arcore3dscanner_main_JNI_getFrozenChunkCount(JNIEnv *env, jclass clazz) {
+    return app.GetFrozenChunkCount();
+}
+
+JNIEXPORT void JNICALL
+Java_com_lvonasek_arcore3dscanner_main_JNI_unfreezeScan(JNIEnv *env, jclass clazz) {
+    app.UnfreezeScan();
+}
+// === END PAUSE/RESUME ===
+
+// === SERVER STREAMING ===
+JNIEXPORT jshortArray JNICALL
+Java_com_lvonasek_arcore3dscanner_main_JNI_getDepthData(JNIEnv *env, jclass clazz) {
+    std::vector<uint16_t> data = app.GetDepthData();
+    if (data.empty()) return nullptr;
+    
+    jshortArray result = env->NewShortArray(data.size());
+    env->SetShortArrayRegion(result, 0, data.size(), (jshort*)data.data());
+    return result;
+}
+
+JNIEXPORT jfloatArray JNICALL
+Java_com_lvonasek_arcore3dscanner_main_JNI_getCameraPose(JNIEnv *env, jclass clazz) {
+    std::vector<float> pose = app.GetCameraPose();
+    jfloatArray result = env->NewFloatArray(16);
+    env->SetFloatArrayRegion(result, 0, 16, pose.data());
+    return result;
+}
+
+JNIEXPORT jfloatArray JNICALL
+Java_com_lvonasek_arcore3dscanner_main_JNI_getDepthIntrinsics(JNIEnv *env, jclass clazz) {
+    std::vector<float> intrinsics = app.GetDepthIntrinsics();
+    jfloatArray result = env->NewFloatArray(6);
+    env->SetFloatArrayRegion(result, 0, 6, intrinsics.data());
+    return result;
+}
+
+JNIEXPORT jdouble JNICALL
+Java_com_lvonasek_arcore3dscanner_main_JNI_getFrameTimestamp(JNIEnv *env, jclass clazz) {
+    return app.GetFrameTimestamp();
+}
+// === END SERVER STREAMING ===
 
 #ifdef __cplusplus
 }

@@ -48,6 +48,17 @@ namespace oc {
         void SetEvent(std::string value);
         void SetPhotoMode(bool on);
         int GetScanSize();
+        
+        // Pause/Resume scanning with geometry freezing
+        void FreezeScan();
+        int GetFrozenChunkCount();
+        void UnfreezeScan();
+        
+        // Server streaming - get frame data for remote reconstruction
+        std::vector<uint16_t> GetDepthData();
+        std::vector<float> GetCameraPose();
+        std::vector<float> GetDepthIntrinsics();
+        double GetFrameTimestamp();
 
         void Backup();
         void Restore();

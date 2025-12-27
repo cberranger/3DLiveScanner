@@ -36,6 +36,7 @@ import androidx.core.content.FileProvider;
 import com.lvonasek.arcore3dscanner.R;
 import com.lvonasek.arcore3dscanner.sketchfab.OAuth;
 import com.lvonasek.arcore3dscanner.ui.AbstractActivity;
+import com.lvonasek.arcore3dscanner.utils.AppExecutors;
 import com.lvonasek.arcore3dscanner.ui.CommonDialogs;
 import com.lvonasek.arcore3dscanner.ui.Service;
 import com.lvonasek.gles.GLESSurfaceView;
@@ -415,30 +416,30 @@ public class Main extends AbstractActivity implements View.OnClickListener,
       mIndicators.setOverrideMessage(null);
       mLayoutUndo.setVisibility(View.GONE);
       mLayoutWait.setVisibility(View.VISIBLE);
-      new Thread(() -> {
+      AppExecutors.getInstance().computation().execute(() -> {
         JNI.onUndoButtonClicked(true, true);
         runOnUiThread(() -> {
           mLayoutRec.setVisibility(View.VISIBLE);
           mLayoutWait.setVisibility(View.GONE);
         });
-      }).start();
+      });
     } else if (id == R.id.undo_cancel) {
       mIndicators.setOverrideMessage(null);
-      new Thread(() -> {
+      AppExecutors.getInstance().computation().execute(() -> {
         JNI.onUndoPreviewUpdate(Integer.MAX_VALUE);
         runOnUiThread(() -> {
           mLayoutRec.setVisibility(View.VISIBLE);
           mLayoutUndo.setVisibility(View.GONE);
         });
-      }).start();
+      });
     } else if (id == R.id.undo_back) {
-      new Thread(() -> JNI.onUndoPreviewUpdate(-1)).start();
+      AppExecutors.getInstance().computation().execute(() -> JNI.onUndoPreviewUpdate(-1));
     } else if (id == R.id.undo_back_fast) {
-      new Thread(() -> JNI.onUndoPreviewUpdate(-10)).start();
+      AppExecutors.getInstance().computation().execute(() -> JNI.onUndoPreviewUpdate(-10));
     } else if (id == R.id.undo_fwd) {
-      new Thread(() -> JNI.onUndoPreviewUpdate(1)).start();
+      AppExecutors.getInstance().computation().execute(() -> JNI.onUndoPreviewUpdate(1));
     } else if (id == R.id.undo_fwd_fast) {
-      new Thread(() -> JNI.onUndoPreviewUpdate(10)).start();
+      AppExecutors.getInstance().computation().execute(() -> JNI.onUndoPreviewUpdate(10));
     } else if (id == R.id.save_button) {
       if (isFaceModeOn(this)) {
         save();
@@ -498,7 +499,7 @@ public class Main extends AbstractActivity implements View.OnClickListener,
         mOpenedFile = mToLoad;
         mToLoad = null;
 
-        new Thread(() -> {
+        AppExecutors.getInstance().computation().execute(() -> {
           if (!JNI.load(file.getBytes())) {
             showAndroidBugDialog();
           };
@@ -506,7 +507,7 @@ public class Main extends AbstractActivity implements View.OnClickListener,
             mCameraControl.captureBitmap(false, mOpenedFile);
           Main.this.runOnUiThread(() -> mProgress.setVisibility(View.GONE));
           mInitialised = true;
-        }).start();
+        });
       }
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     } else {
@@ -608,7 +609,7 @@ public class Main extends AbstractActivity implements View.OnClickListener,
       //begin long click
       else if (!mEditor.initialized()) {
         mLongClick = true;
-        new Thread(onLongClick).start();
+        AppExecutors.getInstance().computation().execute(onLongClick);
       }
       mLastClick = System.currentTimeMillis();
       mLastClickX = event.getX();
@@ -621,10 +622,10 @@ public class Main extends AbstractActivity implements View.OnClickListener,
       //short click
       else if (System.currentTimeMillis() - mLastClick < 500) {
         if (mSelection) {
-          new Thread(() -> {
+          AppExecutors.getInstance().computation().execute(() -> {
             JNI.completeSelection(true);
             mSelection = false;
-          }).start();
+          });
         } else if (!mCameraControl.isViewMode()) {
             if (isCameraFeedOn(this)) {
               if (mViewCamera == 0) {
@@ -721,7 +722,7 @@ public class Main extends AbstractActivity implements View.OnClickListener,
               mEditorButton.setVisibility(View.GONE);
               mThumbnailButton.setVisibility(View.GONE);
               mIgnoreSaving = true;
-              new Thread(() -> {
+              AppExecutors.getInstance().diskIO().execute(() -> {
                 File folder = new File(mOpenedFile).getParentFile();
                 if ((folder == null) || (folder.getAbsolutePath().length() <= getPath(false).length())) {
                   folder = new File(getPath(false));
@@ -733,7 +734,7 @@ public class Main extends AbstractActivity implements View.OnClickListener,
                   startActivity(intent);
                   finish();
                 });
-              }).start();
+              });
               break;
             case 1:
               captureScreenshot();
@@ -760,14 +761,14 @@ public class Main extends AbstractActivity implements View.OnClickListener,
   private void captureScreenshot() {
     mProgress.setVisibility(View.VISIBLE);
     mThumbnailButton.setVisibility(View.GONE);
-    new Thread(() -> {
+    AppExecutors.getInstance().diskIO().execute(() -> {
       mIgnoreSaving = true;
       mCameraControl.captureBitmap(true, mOpenedFile);
       runOnUiThread(() -> {
         mProgress.setVisibility(View.GONE);
         mThumbnailButton.setVisibility(View.VISIBLE);
       });
-    }).start();
+    });
   }
 
   @Override
@@ -793,7 +794,7 @@ public class Main extends AbstractActivity implements View.OnClickListener,
         mCameraRecordYaw = Integer.MAX_VALUE;
         mCameraControl.updateViewYaw(0);
         mRecording = false;
-        new Thread(() -> {
+        AppExecutors.getInstance().diskIO().execute(() -> {
           Recorder.stopCapturingVideo(Main.this, false);
           runOnUiThread(() -> {
             mLayoutView.setVisibility(View.VISIBLE);
@@ -810,7 +811,7 @@ public class Main extends AbstractActivity implements View.OnClickListener,
               startActivity(Intent.createChooser(intent, getString(com.lvonasek.arcore3dscanner.R.string.share_via)));
             }
           });
-        }).start();
+        });
       } else if (mCameraRecordYaw < Integer.MAX_VALUE * 0.5f) {
         Recorder.captureVideoFrame(gl, mGLView, false, 1, false);
         mCameraRecordYaw += 1;

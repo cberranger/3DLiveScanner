@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- File Manager !-->
-    <string name="app_name" translatable="false">3D Live Scanner</string>
+    <string name="app_name" translatable="false">3D Live Scanner - Remix</string>
     <string name="no_data">No 3D models</string>
     <string name="migrating_data">Migrating data into a new folder, please wait…</string>
     <string name="name_exists">A model with the entered name already exists.</string>
@@ -31,6 +31,9 @@
     <string name="resolve_manually">Resolve the problem</string>
     <string name="show_normals">Show normals</string>
     <string name="photo_mode">Photo mode</string>
+    <string name="freeze_scan">Freeze Scan</string>
+    <string name="unfreeze_scan">Unfreeze</string>
+    <string name="frozen_chunks">Frozen: %d chunks</string>
 
     <!-- Sketchfab uploader !-->
     <string name="description">Description:</string>
@@ -53,6 +56,19 @@
     <string name="mode_realtime">Indoor/outdoor scanning</string>
     <string name="mode_dataset">Capture a dataset</string>
     <string name="mode_face">Face scanning</string>
+    
+    <!-- Server Offload -->
+    <string name="server_offload">Server Offload</string>
+    <string name="server_enabled">Enable Server Mode</string>
+    <string name="server_enabled_summary">Stream depth frames to GPU server for reconstruction</string>
+    <string name="server_url">Server URL</string>
+    <string name="server_url_summary">WebSocket URL (e.g. ws://192.168.1.100:8765)</string>
+    <string name="pref_server_enabled">pref_server_enabled</string>
+    <string name="pref_server_url">pref_server_url</string>
+    <string name="server_connected">Server: Connected</string>
+    <string name="server_disconnected">Server: Disconnected</string>
+    <string name="server_connecting">Server: Connecting...</string>
+    
     <string name="scan_single_room">Single room scanning</string>
     <string name="scan_large_interior">Large interior scanning</string>
     <string name="scan_exterior">Exterior scanning</string>
@@ -180,6 +196,16 @@
     </string-array>
 
     <string-array name="empty">
+    </string-array>
+
+    <!-- Server URLs -->
+    <string-array name="server_names">
+        <item>Main Server (RTX 3090)</item>
+        <item>Laptop (RTX 4060)</item>
+    </string-array>
+    <string-array name="server_values">
+        <item>ws://192.168.1.10:8765</item>
+        <item>ws://192.168.1.147:8765</item>
     </string-array>
 
     <!-- Branded apps texts !-->

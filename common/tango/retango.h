@@ -5,6 +5,10 @@
 #include "data/file3d.h"
 #include "gl/opengl.h"
 
+// OpenCV FLANN for fast spatial queries
+#include <opencv2/core.hpp>
+#include <opencv2/flann.hpp>
+
 namespace oc {
 
     struct Edge {
@@ -56,7 +60,9 @@ namespace oc {
         void UpdateDelaunayEstimation(glm::mat4& pose);
         void UpdateMasked(glm::mat4& pose, int s = 15);
         void UpdatePairEstimation(glm::mat4 &pose);
+        void UpdatePairEstimationKDTree(glm::mat4 &pose);
         void UpdateWallEstimation(glm::mat4 &pose);
+        void BuildKDTree();
 
         //points
         std::vector<glm::vec4> converted;
@@ -64,6 +70,11 @@ namespace oc {
         std::vector<glm::vec3> input;
         std::vector<glm::vec4> merged;
         std::vector<glm::vec4> output;
+
+        //k-d tree for fast spatial queries
+        cv::Mat kdTreeData_;
+        cv::Ptr<cv::flann::Index> kdTree_;
+        bool kdTreeValid_;
 
         //masks
         bool* finished;

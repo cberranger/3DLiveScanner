@@ -6,9 +6,19 @@ std::string gl_last_error;
 oc::GLSL* gl_last_shader = 0;
 
 namespace oc {
+
+    // Disable ES 3.2 shader conversion for now - use ES 2.0 for stability
+    // The performance difference is minimal and ES 2.0 is more compatible
+    static bool useES32Shaders() {
+        return false;  // Disabled until fully tested
+    }
+
     GLSL::GLSL(std::string vert, std::string frag, std::string extension) {
-        /// add header
+        vao_ = 0;
+        
+        // Use ES 2.0 (GLSL 100) for maximum compatibility
         std::string header = "#version 100\n" + extension + "precision highp float;\n";
+        
         vert = header + vert;
         frag = header + frag;
 
@@ -23,12 +33,74 @@ namespace oc {
     }
 
     GLSL::~GLSL() {
+        if (vao_) {
+            glDeleteVertexArrays(1, &vao_);
+        }
         glDetachShader(id, shader_vp);
         glDetachShader(id, shader_fp);
         glDeleteShader(shader_vp);
         glDeleteShader(shader_fp);
         glUseProgram(0);
         glDeleteProgram(id);
+    }
+
+    std::string GLSL::ConvertToES32Vertex(const std::string& src) {
+        std::string result = src;
+        
+        // Replace 'attribute' with 'in'
+        size_t pos = 0;
+        while ((pos = result.find("attribute ", pos)) != std::string::npos) {
+            result.replace(pos, 10, "in ");
+            pos += 3;
+        }
+        
+        // Replace 'varying' with 'out' in vertex shader
+        pos = 0;
+        while ((pos = result.find("varying ", pos)) != std::string::npos) {
+            result.replace(pos, 8, "out ");
+            pos += 4;
+        }
+        
+        return result;
+    }
+
+    std::string GLSL::ConvertToES32Fragment(const std::string& src) {
+        std::string result = src;
+        
+        // Replace 'varying' with 'in' in fragment shader
+        size_t pos = 0;
+        while ((pos = result.find("varying ", pos)) != std::string::npos) {
+            result.replace(pos, 8, "in ");
+            pos += 3;
+        }
+        
+        // Replace 'texture2D' with 'texture'
+        pos = 0;
+        while ((pos = result.find("texture2D", pos)) != std::string::npos) {
+            result.replace(pos, 9, "texture");
+            pos += 7;
+        }
+        
+        // Replace 'textureCube' with 'texture'
+        pos = 0;
+        while ((pos = result.find("textureCube", pos)) != std::string::npos) {
+            result.replace(pos, 11, "texture");
+            pos += 7;
+        }
+        
+        // Add output declaration for gl_FragColor replacement
+        // Insert at beginning: "out vec4 fragColor;\n"
+        // And replace gl_FragColor with fragColor
+        if (result.find("gl_FragColor") != std::string::npos) {
+            result = "out vec4 fragColor;\n" + result;
+            pos = 0;
+            while ((pos = result.find("gl_FragColor", pos)) != std::string::npos) {
+                result.replace(pos, 12, "fragColor");
+                pos += 9;
+            }
+        }
+        
+        return result;
     }
 
     void GLSL::Attrib(float* vertices, float* normals, float* coords, unsigned int* colors) {
@@ -131,6 +203,7 @@ namespace oc {
     void GLSL::Unbind() {
         gl_last_shader = 0;
         glUseProgram(0);
+        glBindVertexArray(0);
     }
 
     void GLSL::UniformFloat(const char* name, float value) {

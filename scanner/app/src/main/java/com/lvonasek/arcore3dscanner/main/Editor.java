@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.lvonasek.arcore3dscanner.ui.AbstractActivity;
 import com.lvonasek.arcore3dscanner.R;
+import com.lvonasek.arcore3dscanner.utils.AppExecutors;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -109,28 +110,11 @@ public class Editor extends View implements Button.OnClickListener, View.OnTouch
       public void onStopTrackingTouch(SeekBar seekBar)
       {
       }
-    });
-    new Thread(() -> {
-      JNI.completeSelection(mComplete);
-      mContext.runOnUiThread(() -> mProgress.setVisibility(View.GONE));
-    }).start();
-  }
-
-  private void applyTransform()
-  {
-    final int axis = mAxis;
-    mProgress.setVisibility(View.VISIBLE);
-    new Thread(() -> {
-      JNI.applyEffect(mEffect.ordinal(), mSeek.getProgress() - 127, axis);
-      mContext.runOnUiThread(() -> mProgress.setVisibility(View.INVISIBLE));
-    }).start();
-  }
-
-  public boolean initialized() { return mInitialized; }
-
-  public boolean movingLocked()
-  {
-    return mStatus != Status.IDLE;
+      });
+    AppExecutors.getInstance().computation().execute(() -> {
+        JNI.completeSelection(mComplete);
+        mContext.runOnUiThread(() -> mProgress.setVisibility(View.GONE));
+      });
   }
 
   private Rect normalizeRect(Rect input)
@@ -181,10 +165,10 @@ public class Editor extends View implements Button.OnClickListener, View.OnTouch
         setMainScreen();
       } else if (mStatus == Status.UPDATE_COLORS) {
         mProgress.setVisibility(View.VISIBLE);
-        new Thread(() -> {
+        AppExecutors.getInstance().computation().execute(() -> {
             JNI.applyEffect(mEffect.ordinal(), mSeek.getProgress() - 127, 0);
             mContext.runOnUiThread(() -> mProgress.setVisibility(View.INVISIBLE));
-          }).start();
+          });
         setMainScreen();
       } else if (mStatus == Status.UPDATE_TRANSFORM) {
         applyTransform();
@@ -208,11 +192,11 @@ public class Editor extends View implements Button.OnClickListener, View.OnTouch
       if (view.getId() == R.id.editor1a)
       {
         mProgress.setVisibility(View.VISIBLE);
-        new Thread(() -> {
+        AppExecutors.getInstance().computation().execute(() -> {
           mComplete = !mComplete;
           JNI.completeSelection(mComplete);
           mContext.runOnUiThread(() -> mProgress.setVisibility(View.GONE));
-        }).start();
+        });
       }
       //select object
       if (view.getId() == R.id.editor1b) {
@@ -241,19 +225,19 @@ public class Editor extends View implements Button.OnClickListener, View.OnTouch
       if (view.getId() == R.id.editor1e)
       {
         mProgress.setVisibility(View.VISIBLE);
-        new Thread(() -> {
+        AppExecutors.getInstance().computation().execute(() -> {
           JNI.multSelection(false);
           mContext.runOnUiThread(() -> mProgress.setVisibility(View.GONE));
-        }).start();
+        });
       }
       //select more
       if (view.getId() == R.id.editor1f)
       {
         mProgress.setVisibility(View.VISIBLE);
-        new Thread(() -> {
+        AppExecutors.getInstance().computation().execute(() -> {
           JNI.multSelection(true);
           mContext.runOnUiThread(() -> mProgress.setVisibility(View.GONE));
-        }).start();
+        });
       }
     }
 
@@ -302,10 +286,10 @@ public class Editor extends View implements Button.OnClickListener, View.OnTouch
       if (view.getId() == R.id.editor2e)
       {
         mProgress.setVisibility(View.VISIBLE);
-        new Thread(() -> {
+        AppExecutors.getInstance().computation().execute(() -> {
           JNI.applyEffect(Effect.RESET.ordinal(), 0, 0);
           mContext.runOnUiThread(() -> mProgress.setVisibility(View.INVISIBLE));
-        }).start();
+        });
       }
     }
 
@@ -342,26 +326,26 @@ public class Editor extends View implements Button.OnClickListener, View.OnTouch
       if (view.getId() == R.id.editor4a)
       {
         mProgress.setVisibility(View.VISIBLE);
-        new Thread(() -> {
+        AppExecutors.getInstance().computation().execute(() -> {
           JNI.restore();
           mContext.runOnUiThread(() -> mProgress.setVisibility(View.INVISIBLE));
-        }).start();
+        });
       }
       if (view.getId() == R.id.editor4b)
       {
         mProgress.setVisibility(View.VISIBLE);
-        new Thread(() -> {
+        AppExecutors.getInstance().computation().execute(() -> {
           JNI.applyEffect(Effect.CLONE.ordinal(), 0, 0);
           mContext.runOnUiThread(() -> mProgress.setVisibility(View.INVISIBLE));
-        }).start();
+        });
       }
       if (view.getId() == R.id.editor4c)
       {
         mProgress.setVisibility(View.VISIBLE);
-        new Thread(() -> {
+        AppExecutors.getInstance().computation().execute(() -> {
           JNI.applyEffect(Effect.DELETE.ordinal(), 0, 0);
           mContext.runOnUiThread(() -> mProgress.setVisibility(View.INVISIBLE));
-        }).start();
+        });
       }
       if (view.getId() == R.id.editor4d)
       {
@@ -424,7 +408,7 @@ public class Editor extends View implements Button.OnClickListener, View.OnTouch
         e.printStackTrace();
       }
       mProgress.setVisibility(View.VISIBLE);
-      new Thread(() -> {
+      AppExecutors.getInstance().computation().execute(() -> {
         long timestamp = System.currentTimeMillis();
         final File obj = new File(AbstractActivity.getTempPath(), timestamp + Exporter.EXT_OBJ);
         JNI.saveWithTextures(obj.getAbsolutePath().getBytes());
@@ -435,7 +419,7 @@ public class Editor extends View implements Button.OnClickListener, View.OnTouch
         if (obj.renameTo(file2save))
           Log.d(AbstractActivity.TAG, "Obj file " + file2save.toString() + " saved.");
         mContext.runOnUiThread(() -> mProgress.setVisibility(View.GONE));
-      }).start();
+      });
       dialog.cancel();
     });
     builder.setNegativeButton(mContext.getString(android.R.string.cancel), null);
@@ -516,6 +500,27 @@ public class Editor extends View implements Button.OnClickListener, View.OnTouch
     JNI.showNormals(mShowNormals);
   }
 
+  public boolean initialized()
+  {
+    return mInitialized;
+  }
+
+  public boolean movingLocked()
+  {
+    return (mStatus == Status.SELECT_CIRCLE) || (mStatus == Status.SELECT_RECT);
+  }
+
+  private void applyTransform()
+  {
+    if (mStatus == Status.UPDATE_TRANSFORM) {
+      mProgress.setVisibility(View.VISIBLE);
+      AppExecutors.getInstance().computation().execute(() -> {
+        JNI.applyEffect(mEffect.ordinal(), mSeek.getProgress() - 127, mAxis);
+        mContext.runOnUiThread(() -> mProgress.setVisibility(View.INVISIBLE));
+      });
+    }
+  }
+
   public void touchEvent(final MotionEvent event)
   {
     if (!mBackShown) {
@@ -525,10 +530,10 @@ public class Editor extends View implements Button.OnClickListener, View.OnTouch
 
     if (mStatus == Status.SELECT_OBJECT) {
       mProgress.setVisibility(View.VISIBLE);
-      new Thread(() -> {
+      AppExecutors.getInstance().computation().execute(() -> {
         JNI.applySelect(event.getX(), getHeight() - event.getY(), false);
         mContext.runOnUiThread(() -> mProgress.setVisibility(View.GONE));
-      }).start();
+      });
       mStatus = Status.IDLE;
       setSelectScreen();
     }

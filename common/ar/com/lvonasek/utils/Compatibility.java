@@ -55,6 +55,9 @@ public class Compatibility {
             return true;
         }
         try {
+            if (!isHuaweiAREngineServiceInstalled(context)) {
+                return false;
+            }
             ARSession session = new ARSession(context);
             ARWorldTrackingConfig config = new ARWorldTrackingConfig(session);
             session.configure(config);
@@ -153,6 +156,9 @@ public class Compatibility {
         if (!hasToFSensor(activity)) return false;
 
         try {
+            if (!isHuaweiAREngineServiceInstalled(activity)) {
+                return false;
+            }
             ARSession session = new ARSession(activity);
             ARWorldTrackingConfig config = new ARWorldTrackingConfig(session);
             config.setEnableItem(ARConfigBase.ENABLE_DEPTH | ARConfigBase.ENABLE_MESH);
@@ -160,6 +166,15 @@ public class Compatibility {
             return session.isSupported(config);
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean isHuaweiAREngineServiceInstalled(Context context) {
+        try {
+            context.getPackageManager().getPackageInfo("com.huawei.arengine.service", 0);
+            return true;
+        } catch (Exception e) {
             return false;
         }
     }
@@ -175,6 +190,6 @@ public class Compatibility {
     }
 
     public static boolean shouldUseHuawei(Activity activity) {
-        return isHuaweiToFSupported(activity) || !isPlayStoreSupported(activity);
+        return isHuaweiToFSupported(activity) || (!isPlayStoreSupported(activity) && isHuaweiAREngineServiceInstalled(activity));
     }
 }

@@ -3,16 +3,20 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := libjpeg-turbo
 
-#LOCAL_ARM_NEON := true
-#LOCAL_CFLAGS += -D__ARM_HAVE_NEON
+LOCAL_ARM_NEON := true
+LOCAL_CFLAGS += -D__ARM_HAVE_NEON
 LOCAL_ASMFLAGS += -DELF
 
-#LOCAL_SRC_FILES += \
-	src/simd/jsimd_arm.c \
-	src/simd/jsimd_arm_neon.S \
-	
+
+ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
 LOCAL_SRC_FILES += \
-	src/jsimd_none.c \
+	src/simd/jsimd_arm64.c \
+	src/simd/jsimd_arm64_neon.S
+else
+LOCAL_SRC_FILES += \
+	src/simd/jsimd_arm.c \
+	src/simd/jsimd_arm_neon.S
+endif \
 
 
 ifneq ($(filter $(TARGET_ARCH_ABI), armeabi-v7a armeabi-v7a-hard),)

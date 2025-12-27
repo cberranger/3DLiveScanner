@@ -260,15 +260,13 @@ public class CameraControl {
         mPrevious = mView;
         updateView(ViewMode.VR);
 
-        new Thread(() -> mActivity.runOnUiThread(() -> {
-            Intent i;
-            if (Compatibility.isDaydreamSupported(mActivity))
-                i = new Intent(mActivity, DaydreamActivity.class);
-            else
-                i = new Intent(mActivity, CardboardActivity.class);
-            i.setDataAndType(Uri.parse(filename), "text/plain");
-            mActivity.startActivity(i);
-        })).start();
+        Intent i;
+        if (Compatibility.isDaydreamSupported(mActivity))
+            i = new Intent(mActivity, DaydreamActivity.class);
+        else
+            i = new Intent(mActivity, CardboardActivity.class);
+        i.setDataAndType(Uri.parse(filename), "text/plain");
+        mActivity.startActivity(i);
     }
 
     private float getMoveFactor() {
