@@ -775,6 +775,21 @@ namespace oc {
                     ArImage_getTimestamp(ar_session_, image, &timestamp);
 
                     if (imgData) {
+                        // Store depth buffer for server streaming
+                        {
+                            std::lock_guard<std::mutex> lock(depthBufferMutex);
+                            lastDepthWidth = depthWidth;
+                            lastDepthHeight = depthHeight;
+                            int pixelCount = depthWidth * depthHeight;
+                            lastDepthBuffer.resize(pixelCount);
+                            // Copy with stride handling
+                            for (int row = 0; row < depthHeight; row++) {
+                                for (int col = 0; col < depthWidth; col++) {
+                                    lastDepthBuffer[row * depthWidth + col] = imgData[row * stride / 2 + col];
+                                }
+                            }
+                        }
+                        
                         ArImage* image2 = nullptr;
                         uint16_t* imgData2 = nullptr;
                         bool hasSecondary = false;
@@ -1028,5 +1043,12 @@ namespace oc {
             }
         }
         has_coordinate_system_ = true;
+    }
+
+    std::vector<uint16_t> ARCore::GetLastDepthBuffer(int& width, int& height) {
+        std::lock_guard<std::mutex> lock(depthBufferMutex);
+        width = lastDepthWidth;
+        height = lastDepthHeight;
+        return lastDepthBuffer;  // Returns copy
     }
 }

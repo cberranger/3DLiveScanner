@@ -77,6 +77,9 @@ namespace oc {
         void SetOffset(float offset);
 
         void SetResolution(float res);
+        
+        // Get last captured depth buffer for server streaming (returns copy)
+        std::vector<uint16_t> GetLastDepthBuffer(int& width, int& height);
 
     private:
         ARCore* google;

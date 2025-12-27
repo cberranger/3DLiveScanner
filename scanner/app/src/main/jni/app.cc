@@ -433,11 +433,11 @@ namespace oc {
     }
     
     std::vector<uint16_t> App::GetDepthData() {
-        std::vector<uint16_t> result;
-        // Note: Full implementation requires storing depth buffer in ARCore/Reconstruction
-        // For now, return empty - server will just receive poses
-        // TODO: Hook into ARCore depth callback to capture raw depth
-        return result;
+        if (ar) {
+            int width, height;
+            return ar->GetLastDepthBuffer(width, height);
+        }
+        return std::vector<uint16_t>();
     }
     
     std::vector<float> App::GetCameraPose() {
@@ -457,13 +457,22 @@ namespace oc {
     
     std::vector<float> App::GetDepthIntrinsics() {
         std::vector<float> result(6);
-        reconstruction.binder_mutex_.lock();
-        // Get from calibration matrix - use actual depth sensor dimensions
-        glm::mat4 calib = reconstruction.frame_calibration;
         
-        // Typical ToF sensor dimensions
+        // Get actual depth dimensions from AR service
         float depth_w = 240.0f;
         float depth_h = 180.0f;
+        
+        if (ar) {
+            int w, h;
+            ar->GetLastDepthBuffer(w, h);  // Just to get dimensions
+            if (w > 0 && h > 0) {
+                depth_w = (float)w;
+                depth_h = (float)h;
+            }
+        }
+        
+        reconstruction.binder_mutex_.lock();
+        glm::mat4 calib = reconstruction.frame_calibration;
         
         // Check if calibration matrix is valid
         float fx = calib[0][0];
@@ -478,6 +487,18 @@ namespace oc {
             result[4] = depth_w / 2.0f;  // cx
             result[5] = depth_h / 2.0f;  // cy
         } else {
+            // Fallback: typical ToF intrinsics
+            result[0] = depth_w;
+            result[1] = depth_h;
+            result[2] = 200.0f;  // fx (typical for ToF)
+            result[3] = 200.0f;  // fy
+            result[4] = depth_w / 2.0f;  // cx
+            result[5] = depth_h / 2.0f;  // cy
+        }
+        
+        reconstruction.binder_mutex_.unlock();
+        return result;
+    }
             // Fallback: typical ToF intrinsics
             result[0] = depth_w;
             result[1] = depth_h;

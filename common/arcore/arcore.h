@@ -2,6 +2,7 @@
 #define ARCORE_ARCORE_H
 
 #include <map>
+#include <mutex>
 #include <jni.h>
 #include <arcore/camera.h>
 #include <data/image.h>
@@ -119,6 +120,17 @@ namespace oc {
         bool gpuInitialized = false;
         GLuint gpuDepthTexInput = 0;
         GLuint gpuDepthTexOutput = 0;
+        
+        // Stored depth buffer for server streaming
+        std::vector<uint16_t> lastDepthBuffer;
+        int lastDepthWidth = 0;
+        int lastDepthHeight = 0;
+        std::mutex depthBufferMutex;
+        
+    public:
+        // Get last captured depth buffer (for server streaming)
+        std::vector<uint16_t> GetLastDepthBuffer(int& width, int& height);
+        void GetDepthDimensions(int& width, int& height) { width = lastDepthWidth; height = lastDepthHeight; }
     };
 }
 

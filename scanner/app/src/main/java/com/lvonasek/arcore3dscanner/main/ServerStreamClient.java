@@ -52,7 +52,12 @@ public class ServerStreamClient {
     private final AtomicInteger pendingFrames = new AtomicInteger(0);
     
     private final LZ4Compressor compressor;
-    private static final int MAX_PENDING_FRAMES = 5;
+    private static final int MAX_PENDING_FRAMES = 3;  // Reduced for smoother streaming
+    
+    // Frame rate limiting
+    private long lastFrameTime = 0;
+    private static final long MIN_FRAME_INTERVAL_MS = 100;  // Max 10 FPS to server
+    private int frameSkipCount = 0;
     
     public ServerStreamClient(String serverUrl) {
         this.serverUrl = serverUrl;
@@ -197,9 +202,20 @@ public class ServerStreamClient {
             return;
         }
         
+        // Frame rate limiting - max 10 FPS
+        long now = System.currentTimeMillis();
+        if (now - lastFrameTime < MIN_FRAME_INTERVAL_MS) {
+            frameSkipCount++;
+            return;
+        }
+        lastFrameTime = now;
+        
         // Backpressure - skip if too many pending
         if (pendingFrames.get() >= MAX_PENDING_FRAMES) {
-            Log.w(TAG, "Dropping frame - server behind");
+            frameSkipCount++;
+            if (frameSkipCount % 30 == 0) {
+                Log.w(TAG, "Dropping frames - server behind (skipped " + frameSkipCount + ")");
+            }
             return;
         }
         

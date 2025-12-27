@@ -280,4 +280,20 @@ namespace oc {
         else
             return google->GetDepthMap(false, true, 1);
     }
+
+    std::vector<uint16_t> ARCoreService::GetLastDepthBuffer(int& width, int& height) {
+        if (mode_ >= HUAWEI_SFM) {
+            // TODO: Add depth buffer storage to AREngine if needed
+            width = 0;
+            height = 0;
+            return std::vector<uint16_t>();
+        } else {
+            if (google) {
+                return google->GetLastDepthBuffer(width, height);
+            }
+            width = 0;
+            height = 0;
+            return std::vector<uint16_t>();
+        }
+    }
 }
