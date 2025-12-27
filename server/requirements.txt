@@ -1,0 +1,23 @@
+# 3D Live Scanner - Server Offload
+# GPU-accelerated reconstruction server
+
+# Core
+numpy>=1.24.0
+scipy>=1.10.0
+
+# 3D Processing
+open3d
+trimesh>=4.0.0
+
+# Networking
+websockets>=11.0
+asyncio-mqtt>=0.16.0
+
+# GPU Support (optional, for neural reconstruction)
+ torch>=2.0.0
+ torchvision>=0.15.0
+
+# Utilities
+pillow>=9.0.0
+msgpack>=1.0.0
+lz4>=4.0.0

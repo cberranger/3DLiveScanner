@@ -1,0 +1,95 @@
+{
+  "violations": [
+    {
+      "file": "common\\utils\\com\\lvonasek\\utils\\GPS.java",
+      "language": "java",
+      "name": "@RequiresPermission",
+      "expected": "@requirespermission",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "common\\utils\\com\\lvonasek\\utils\\GestureDetector.java",
+      "language": "java",
+      "name": "IsAcceptingRotation",
+      "expected": "isacceptingrotation",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "common\\utils\\com\\lvonasek\\utils\\GestureDetector.java",
+      "language": "java",
+      "name": "OnDrag",
+      "expected": "ondrag",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "common\\utils\\com\\lvonasek\\utils\\GestureDetector.java",
+      "language": "java",
+      "name": "OnTwoFingerMove",
+      "expected": "ontwofingermove",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "common\\utils\\com\\lvonasek\\utils\\GestureDetector.java",
+      "language": "java",
+      "name": "OnTwoFingerRotation",
+      "expected": "ontwofingerrotation",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "common\\utils\\com\\lvonasek\\utils\\GestureDetector.java",
+      "language": "java",
+      "name": "OnPinchToZoom",
+      "expected": "onpinchtozoom",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "scanner\\app\\src\\main\\java\\com\\lvonasek\\arcore3dscanner\\main\\CameraControl.java",
+      "language": "java",
+      "name": "Move",
+      "expected": "move",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "scanner\\app\\src\\main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileAdapter.java",
+      "language": "java",
+      "name": "@SuppressLint",
+      "expected": "@suppresslint",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "scanner\\app\\src\\main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileManager.java",
+      "language": "java",
+      "name": "@SuppressLint",
+      "expected": "@suppresslint",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "scanner\\app\\src\\main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FolderAdapter.java",
+      "language": "java",
+      "name": "@SuppressLint",
+      "expected": "@suppresslint",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "scanner\\app\\src\\main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Settings.java",
+      "language": "java",
+      "name": "@SuppressLint",
+      "expected": "@suppresslint",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    }
+  ],
+  "summary": {
+    "java": 11
+  }
+}

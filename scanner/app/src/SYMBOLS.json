@@ -1,0 +1,456 @@
+{
+  "files": [
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\GenericFileProvider.java",
+      "language": "java"
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\CameraControl.java",
+      "language": "java",
+      "defined": [
+        "Move",
+        "createBitmapFromGLSurface",
+        "captureBitmap",
+        "enterVR",
+        "getMoveFactor",
+        "getViewMode",
+        "getVRButton",
+        "isViewMode",
+        "onDoubleClick",
+        "restoreView",
+        "setOffset",
+        "setViewerMode",
+        "updateButtons",
+        "updateCapture",
+        "updateMotion",
+        "updateView",
+        "updateView",
+        "updateViewYaw"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\DistanceMeasuring.java",
+      "language": "java",
+      "defined": [
+        "drawArrow",
+        "reset",
+        "setGesture"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Editor.java",
+      "language": "java",
+      "defined": [
+        "init",
+        "normalizeRect",
+        "initButtons",
+        "save",
+        "setMainScreen",
+        "setColorScreen",
+        "setSelectScreen",
+        "setTransformScreen",
+        "setViewScreen",
+        "showSeekBar",
+        "showText",
+        "swapNormals",
+        "initialized",
+        "movingLocked",
+        "applyTransform",
+        "touchEvent",
+        "updateAxisButtons"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Exporter.java",
+      "language": "java",
+      "defined": [
+        "compressModel",
+        "export",
+        "isFolder",
+        "getModelType",
+        "getMtlResource",
+        "getObjResources",
+        "makeStructure"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\HandMotionView.java",
+      "language": "java"
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Indicators.java",
+      "language": "java",
+      "defined": [
+        "disable",
+        "setOverrideMessage",
+        "getBatteryPercentage",
+        "updateText"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\JNI.java",
+      "language": "java",
+      "defined": [
+        "onARServiceConnected",
+        "onGlSurfaceChanged",
+        "onGlSurfaceDrawFrame",
+        "onToggleButtonClicked",
+        "onClearButtonClicked",
+        "onUndoButtonClicked",
+        "onUndoPreviewUpdate",
+        "onPause",
+        "extract",
+        "load",
+        "optimize",
+        "save",
+        "saveWithTextures",
+        "setTextureParams",
+        "texturize",
+        "setView",
+        "getDistance",
+        "getFloorLevel",
+        "getView",
+        "getEvent",
+        "getScanSize",
+        "restore",
+        "setPhotoMode",
+        "applyEffect",
+        "previewEffect",
+        "showNormals",
+        "applySelect",
+        "completeSelection",
+        "multSelection",
+        "circleSelection",
+        "rectSelection",
+        "animFinished",
+        "didARjump",
+        "freezeScan",
+        "getFrozenChunkCount",
+        "unfreezeScan",
+        "getDepthData",
+        "getCameraPose",
+        "getDepthIntrinsics",
+        "getFrameTimestamp",
+        "getEvent"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Main.java",
+      "language": "java",
+      "defined": [
+        "getARMode",
+        "initServerStreaming",
+        "reconnectServer",
+        "sendDepthFrameToServer",
+        "bindAR",
+        "if",
+        "if",
+        "if",
+        "if",
+        "getGLView",
+        "pauseScanning",
+        "setViewerMode",
+        "captureScreenshot",
+        "save",
+        "showAndroidBugDialog"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\ServerStreamClient.java",
+      "language": "java",
+      "defined": [
+        "onConnected",
+        "onDisconnected",
+        "onError",
+        "onMeshReceived",
+        "onFrameAck",
+        "setListener",
+        "connect",
+        "disconnect",
+        "isConnected",
+        "isInitialized",
+        "initialize",
+        "sendFrame",
+        "sendFrame",
+        "requestMesh",
+        "reset",
+        "handleMessage"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\OAuth.java",
+      "language": "java",
+      "defined": [
+        "getToken",
+        "setupPermissions"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\Retrofit.java",
+      "language": "java",
+      "defined": [
+        "getRetrofitInstance"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\Uploader.java",
+      "language": "java",
+      "defined": [
+        "getDeviceName",
+        "getTags",
+        "publish"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\AbstractActivity.java",
+      "language": "java",
+      "defined": [
+        "convertDpToPx",
+        "convertPxToDp",
+        "deleteOnBackground",
+        "deleteRecursive",
+        "getNavigationBarHeight",
+        "getStatusBarHeight",
+        "getNavigationBarColor",
+        "getStatusBarColor",
+        "getBackend",
+        "getResolution",
+        "isCameraFeedOn",
+        "isFaceModeOn",
+        "isProVersion",
+        "isPostProcessLaterOn",
+        "isTofOn",
+        "isTofSupported",
+        "listFiles",
+        "openURL",
+        "setOrientation",
+        "setWindow",
+        "askForPermissions",
+        "getModel",
+        "getPath",
+        "getTempPath",
+        "hasFilesToMigrate",
+        "migrate"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\ArrayAdapterWithIcons.java",
+      "language": "java"
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\CommonDialogs.java",
+      "language": "java",
+      "defined": [
+        "confirmDialog",
+        "setImmersive",
+        "setImmersive"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileAdapter.java",
+      "language": "java",
+      "defined": [
+        "@SuppressLint",
+        "hasParent",
+        "toParent",
+        "loadIcon",
+        "getPath",
+        "update",
+        "hasPosition",
+        "showPosition",
+        "rename",
+        "setSelected",
+        "getSelected",
+        "hasExtension",
+        "forwardTouch"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileManager.java",
+      "language": "java",
+      "defined": [
+        "@SuppressLint",
+        "setupPermissions",
+        "showProgress",
+        "finishScanning",
+        "setColumns",
+        "setOptions"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FolderAdapter.java",
+      "language": "java",
+      "defined": [
+        "onPathChanged",
+        "@SuppressLint",
+        "addItem",
+        "clearItems",
+        "getPath",
+        "update"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Initializator.java",
+      "language": "java",
+      "defined": [
+        "getFile",
+        "hasFileIntent",
+        "isFirst"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\RenameDialog.java",
+      "language": "java"
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Service.java",
+      "language": "java",
+      "defined": [
+        "finish",
+        "forceState",
+        "interrupt",
+        "process",
+        "getLink",
+        "getMessage",
+        "getRunning",
+        "setMessage",
+        "setMessageNotification",
+        "reset"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Settings.java",
+      "language": "java",
+      "defined": [
+        "keepUpdated",
+        "getNavigationBarColor",
+        "getStatusBarColor",
+        "@SuppressLint"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Uploader.java",
+      "language": "java",
+      "defined": [
+        "onShowFileChooser",
+        "setupPermissions"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\utils\\AppExecutors.java",
+      "language": "java",
+      "defined": [
+        "initExecutors",
+        "getInstance",
+        "isShutdown",
+        "diskIO",
+        "networkIO",
+        "computation",
+        "shutdown",
+        "executeDiskIO",
+        "executeNetworkIO",
+        "executeComputation"
+      ]
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\CardboardActivity.java",
+      "language": "java"
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\DaydreamActivity.java",
+      "language": "java"
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\VRActivity.java",
+      "language": "java",
+      "defined": [
+        "nativeLoadModel",
+        "nativeInitializeGl",
+        "nativeDrawFrame",
+        "nativeOnTriggerEvent",
+        "nativeUpdate"
+      ]
+    },
+    {
+      "file": "main\\jni\\app.cc",
+      "language": "cpp",
+      "defined": [
+        "AnalyseCallback",
+        "App::App",
+        "App::OnARServiceConnected",
+        "App::OnSurfaceChanged",
+        "App::OnDrawFrame",
+        "App::OnDrawScan",
+        "App::OnToggleButtonClicked",
+        "App::OnClearButtonClicked",
+        "App::OnUndoButtonClicked",
+        "App::OnUndoPreviewUpdate",
+        "App::OnPause",
+        "App::FreezeScan",
+        "App::GetFrozenChunkCount",
+        "App::UnfreezeScan",
+        "App::GetDepthData",
+        "App::GetCameraPose",
+        "App::GetDepthIntrinsics",
+        "App::GetFrameTimestamp",
+        "App::Extract",
+        "App::GetEvent",
+        "App::SetEvent",
+        "App::Load",
+        "App::Optimize",
+        "App::Save",
+        "App::SaveWithTextures",
+        "App::SetTextureParams",
+        "App::Texturize",
+        "App::GetDistance",
+        "App::GetFloorLevel",
+        "App::Backup",
+        "App::Restore",
+        "App::ApplyEffect",
+        "App::PreviewEffect",
+        "App::ShowNormals",
+        "App::ApplySelection",
+        "App::CompleteSelection",
+        "App::MultSelection",
+        "App::CircleSelection",
+        "App::RectSelection",
+        "App::SetView",
+        "App::AnimFinished",
+        "App::DidARJump",
+        "App::GetView",
+        "App::GetScanSize",
+        "App::SetPhotoMode",
+        "jbyteArray2string"
+      ]
+    },
+    {
+      "file": "main\\jni\\app.h",
+      "language": "c"
+    },
+    {
+      "file": "main\\jni\\renderer.cc",
+      "language": "cpp",
+      "defined": [
+        "Renderer::Load",
+        "Renderer::InitializeGl",
+        "Renderer::OnTriggerEvent",
+        "Renderer::DrawModel",
+        "Renderer::Update",
+        "JNI_METHOD",
+        "JNI_METHOD",
+        "JNI_METHOD",
+        "JNI_METHOD",
+        "JNI_METHOD"
+      ]
+    },
+    {
+      "file": "main\\jni\\renderer.h",
+      "language": "c"
+    }
+  ],
+  "summary": {
+    "c": 0,
+    "cpp": 0,
+    "java": 0
+  }
+}

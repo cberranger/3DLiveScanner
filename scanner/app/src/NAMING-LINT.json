@@ -1,0 +1,47 @@
+{
+  "violations": [
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\CameraControl.java",
+      "language": "java",
+      "name": "Move",
+      "expected": "move",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileAdapter.java",
+      "language": "java",
+      "name": "@SuppressLint",
+      "expected": "@suppresslint",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileManager.java",
+      "language": "java",
+      "name": "@SuppressLint",
+      "expected": "@suppresslint",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FolderAdapter.java",
+      "language": "java",
+      "name": "@SuppressLint",
+      "expected": "@suppresslint",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    },
+    {
+      "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Settings.java",
+      "language": "java",
+      "name": "@SuppressLint",
+      "expected": "@suppresslint",
+      "convention": "camelCase (Java/Kotlin convention)",
+      "category": "function"
+    }
+  ],
+  "summary": {
+    "java": 5
+  }
+}

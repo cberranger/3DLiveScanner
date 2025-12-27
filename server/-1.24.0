@@ -1,0 +1,6 @@
+Requirement already satisfied: numpy in c:\users\chris\appdata\roaming\python\python313\site-packages (2.3.4)
+Collecting scipy>=1.10.0
+  Using cached scipy-1.16.3-cp313-cp313-win_amd64.whl.metadata (60 kB)
+Using cached scipy-1.16.3-cp313-cp313-win_amd64.whl (38.5 MB)
+Installing collected packages: scipy
+Successfully installed scipy-1.16.3

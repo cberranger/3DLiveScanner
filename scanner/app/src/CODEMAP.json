@@ -1,0 +1,4086 @@
+{
+  "project_name": "src",
+  "root": "E:\\Code\\3dlivescanner-opus\\scanner\\app\\src",
+  "total_files": 118,
+  "total_size": 6181283,
+  "total_functions": 271,
+  "extensions": {
+    ".aar": 1,
+    ".cc": 2,
+    ".h": 2,
+    ".java": 28,
+    ".json": 3,
+    ".md": 1,
+    ".mk": 2,
+    ".png": 42,
+    ".xml": 37
+  },
+  "files": [
+    {
+      "path": "CODEMAP.json",
+      "size": 119617,
+      "extension": ".json"
+    },
+    {
+      "path": "CODEMAP.md",
+      "size": 19004,
+      "extension": ".md"
+    },
+    {
+      "path": "NAMING-LINT.json",
+      "size": 1414,
+      "extension": ".json"
+    },
+    {
+      "path": "SYMBOLS.json",
+      "size": 10991,
+      "extension": ".json"
+    },
+    {
+      "path": "main\\AndroidManifest.xml",
+      "size": 7793,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\GenericFileProvider.java",
+      "size": 145,
+      "extension": ".java",
+      "language": "java",
+      "imports": [
+        "androidx.core.content.FileProvider;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\CameraControl.java",
+      "size": 19582,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "Move",
+          "parameters": "float f, float dx, float dy, float angle, float pitch",
+          "full_sig": "Move(float f, float dx, float dy, float angle, float pitch)"
+        },
+        {
+          "name": "createBitmapFromGLSurface",
+          "parameters": "int x, int y, int w, int h, GL10 gl",
+          "full_sig": "createBitmapFromGLSurface(int x, int y, int w, int h, GL10 gl)"
+        },
+        {
+          "name": "captureBitmap",
+          "parameters": "boolean forced, String objFile",
+          "full_sig": "captureBitmap(boolean forced, String objFile)"
+        },
+        {
+          "name": "enterVR",
+          "parameters": "String filename",
+          "full_sig": "enterVR(String filename)"
+        },
+        {
+          "name": "getMoveFactor",
+          "parameters": "",
+          "full_sig": "getMoveFactor()"
+        },
+        {
+          "name": "getViewMode",
+          "parameters": "",
+          "full_sig": "getViewMode()"
+        },
+        {
+          "name": "getVRButton",
+          "parameters": "",
+          "full_sig": "getVRButton()"
+        },
+        {
+          "name": "isViewMode",
+          "parameters": "",
+          "full_sig": "isViewMode()"
+        },
+        {
+          "name": "onDoubleClick",
+          "parameters": "float move",
+          "full_sig": "onDoubleClick(float move)"
+        },
+        {
+          "name": "restoreView",
+          "parameters": "",
+          "full_sig": "restoreView()"
+        },
+        {
+          "name": "setOffset",
+          "parameters": "float offset",
+          "full_sig": "setOffset(float offset)"
+        },
+        {
+          "name": "setViewerMode",
+          "parameters": "boolean face, boolean floorplan",
+          "full_sig": "setViewerMode(boolean face, boolean floorplan)"
+        },
+        {
+          "name": "updateButtons",
+          "parameters": "",
+          "full_sig": "updateButtons()"
+        },
+        {
+          "name": "updateCapture",
+          "parameters": "GL10 gl, GLESSurfaceView view",
+          "full_sig": "updateCapture(GL10 gl, GLESSurfaceView view)"
+        },
+        {
+          "name": "updateMotion",
+          "parameters": "MotionEvent event",
+          "full_sig": "updateMotion(MotionEvent event)"
+        },
+        {
+          "name": "updateView",
+          "parameters": "",
+          "full_sig": "updateView()"
+        },
+        {
+          "name": "updateView",
+          "parameters": "ViewMode v",
+          "full_sig": "updateView(ViewMode v)"
+        },
+        {
+          "name": "updateViewYaw",
+          "parameters": "float offset",
+          "full_sig": "updateViewYaw(float offset)"
+        }
+      ],
+      "imports": [
+        "android.content.Intent;",
+        "android.graphics.Bitmap;",
+        "android.graphics.Point;",
+        "android.net.Uri;",
+        "android.view.Display;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "android.widget.ImageButton;",
+        "androidx.core.content.FileProvider;",
+        "com.lvonasek.arcore3dscanner.BuildConfig;",
+        "com.lvonasek.arcore3dscanner.ui.AbstractActivity;",
+        "com.lvonasek.arcore3dscanner.vr.CardboardActivity;",
+        "com.lvonasek.arcore3dscanner.vr.DaydreamActivity;",
+        "com.lvonasek.gles.GLESSurfaceView;",
+        "com.lvonasek.record.Recorder;",
+        "com.lvonasek.utils.Compatibility;",
+        "com.lvonasek.utils.GestureDetector;",
+        "java.io.File;",
+        "java.io.FileOutputStream;",
+        "java.nio.IntBuffer;",
+        "javax.microedition.khronos.opengles.GL10;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\DistanceMeasuring.java",
+      "size": 3759,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "drawArrow",
+          "parameters": "Canvas c, int x1, int y1, int x2, int y2, Paint mPaint",
+          "full_sig": "drawArrow(Canvas c, int x1, int y1, int x2, int y2, Paint mPaint)"
+        },
+        {
+          "name": "reset",
+          "parameters": "",
+          "full_sig": "reset()"
+        },
+        {
+          "name": "setGesture",
+          "parameters": "int count, int x1, int y1, int x2, int y2",
+          "full_sig": "setGesture(int count, int x1, int y1, int x2, int y2)"
+        }
+      ],
+      "imports": [
+        "android.content.Context;",
+        "android.graphics.Canvas;",
+        "android.graphics.Color;",
+        "android.graphics.Paint;",
+        "android.graphics.Paint.Align;",
+        "android.graphics.Paint.Style;",
+        "android.util.AttributeSet;",
+        "android.view.View;",
+        "java.util.Locale;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Editor.java",
+      "size": 19595,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "init",
+          "parameters": "ArrayList\u003cButton\u003e buttons, TextView msg, SeekBar seek, ProgressBar progress, CheckBox deselect, AbstractActivity context",
+          "full_sig": "init(ArrayList\u003cButton\u003e buttons, TextView msg, SeekBar seek, ProgressBar progress, CheckBox deselect, AbstractActivity context)"
+        },
+        {
+          "name": "normalizeRect",
+          "parameters": "Rect input",
+          "full_sig": "normalizeRect(Rect input)"
+        },
+        {
+          "name": "initButtons",
+          "parameters": "",
+          "full_sig": "initButtons()"
+        },
+        {
+          "name": "save",
+          "parameters": "",
+          "full_sig": "save()"
+        },
+        {
+          "name": "setMainScreen",
+          "parameters": "",
+          "full_sig": "setMainScreen()"
+        },
+        {
+          "name": "setColorScreen",
+          "parameters": "",
+          "full_sig": "setColorScreen()"
+        },
+        {
+          "name": "setSelectScreen",
+          "parameters": "",
+          "full_sig": "setSelectScreen()"
+        },
+        {
+          "name": "setTransformScreen",
+          "parameters": "",
+          "full_sig": "setTransformScreen()"
+        },
+        {
+          "name": "setViewScreen",
+          "parameters": "",
+          "full_sig": "setViewScreen()"
+        },
+        {
+          "name": "showSeekBar",
+          "parameters": "boolean axes",
+          "full_sig": "showSeekBar(boolean axes)"
+        },
+        {
+          "name": "showText",
+          "parameters": "int resId",
+          "full_sig": "showText(int resId)"
+        },
+        {
+          "name": "swapNormals",
+          "parameters": "",
+          "full_sig": "swapNormals()"
+        },
+        {
+          "name": "initialized",
+          "parameters": "",
+          "full_sig": "initialized()"
+        },
+        {
+          "name": "movingLocked",
+          "parameters": "",
+          "full_sig": "movingLocked()"
+        },
+        {
+          "name": "applyTransform",
+          "parameters": "",
+          "full_sig": "applyTransform()"
+        },
+        {
+          "name": "touchEvent",
+          "parameters": "final MotionEvent event",
+          "full_sig": "touchEvent(final MotionEvent event)"
+        },
+        {
+          "name": "updateAxisButtons",
+          "parameters": "",
+          "full_sig": "updateAxisButtons()"
+        }
+      ],
+      "imports": [
+        "android.app.AlertDialog;",
+        "android.content.Context;",
+        "android.graphics.Canvas;",
+        "android.graphics.Color;",
+        "android.graphics.Paint;",
+        "android.graphics.Point;",
+        "android.graphics.Rect;",
+        "android.util.AttributeSet;",
+        "android.util.Log;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "android.widget.Button;",
+        "android.widget.CheckBox;",
+        "android.widget.EditText;",
+        "android.widget.ProgressBar;",
+        "android.widget.SeekBar;",
+        "android.widget.TextView;",
+        "com.lvonasek.arcore3dscanner.ui.AbstractActivity;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "com.lvonasek.arcore3dscanner.utils.AppExecutors;",
+        "java.io.File;",
+        "java.util.ArrayList;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Exporter.java",
+      "size": 6191,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "compressModel",
+          "parameters": "File model2share",
+          "full_sig": "compressModel(File model2share)"
+        },
+        {
+          "name": "export",
+          "parameters": "File file, String filename",
+          "full_sig": "export(File file, String filename)"
+        },
+        {
+          "name": "isFolder",
+          "parameters": "String s",
+          "full_sig": "isFolder(String s)"
+        },
+        {
+          "name": "getModelType",
+          "parameters": "String filename",
+          "full_sig": "getModelType(String filename)"
+        },
+        {
+          "name": "getMtlResource",
+          "parameters": "String obj",
+          "full_sig": "getMtlResource(String obj)"
+        },
+        {
+          "name": "getObjResources",
+          "parameters": "File file",
+          "full_sig": "getObjResources(File file)"
+        },
+        {
+          "name": "makeStructure",
+          "parameters": "String path",
+          "full_sig": "makeStructure(String path)"
+        }
+      ],
+      "imports": [
+        "android.util.Log;",
+        "com.lvonasek.arcore3dscanner.ui.AbstractActivity;",
+        "com.lvonasek.utils.IO;",
+        "java.io.File;",
+        "java.io.FileInputStream;",
+        "java.util.ArrayList;",
+        "java.util.Collections;",
+        "java.util.HashSet;",
+        "java.util.Scanner;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\HandMotionView.java",
+      "size": 2496,
+      "extension": ".java",
+      "language": "java",
+      "imports": [
+        "android.app.Activity;",
+        "android.content.Context;",
+        "android.util.AttributeSet;",
+        "android.view.View;",
+        "android.view.animation.Animation;",
+        "android.view.animation.Transformation;",
+        "android.widget.FrameLayout;",
+        "android.widget.ImageView;",
+        "com.lvonasek.arcore3dscanner.R;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Indicators.java",
+      "size": 4689,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "disable",
+          "parameters": "",
+          "full_sig": "disable()"
+        },
+        {
+          "name": "setOverrideMessage",
+          "parameters": "String message",
+          "full_sig": "setOverrideMessage(String message)"
+        },
+        {
+          "name": "getBatteryPercentage",
+          "parameters": "Context context",
+          "full_sig": "getBatteryPercentage(Context context)"
+        },
+        {
+          "name": "updateText",
+          "parameters": "String text",
+          "full_sig": "updateText(String text)"
+        }
+      ],
+      "imports": [
+        "android.app.Activity;",
+        "android.app.ActivityManager;",
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.content.IntentFilter;",
+        "android.graphics.Color;",
+        "android.os.BatteryManager;",
+        "android.view.View;",
+        "android.widget.LinearLayout;",
+        "android.widget.TextView;",
+        "com.lvonasek.arcore3dscanner.ui.AbstractActivity;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\JNI.java",
+      "size": 6329,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "onARServiceConnected",
+          "parameters": "",
+          "full_sig": ""
+        },
+        {
+          "name": "onGlSurfaceChanged",
+          "parameters": "int width, int height, boolean fullhd",
+          "full_sig": "onGlSurfaceChanged(int width, int height, boolean fullhd)"
+        },
+        {
+          "name": "onGlSurfaceDrawFrame",
+          "parameters": "boolean faceMode, float yaw, int viewMode, boolean anchors, boolean grid, boolean smooth",
+          "full_sig": "onGlSurfaceDrawFrame(boolean faceMode, float yaw, int viewMode, boolean anchors, boolean grid, boolean smooth)"
+        },
+        {
+          "name": "onToggleButtonClicked",
+          "parameters": "boolean reconstructionRunning",
+          "full_sig": "onToggleButtonClicked(boolean reconstructionRunning)"
+        },
+        {
+          "name": "onClearButtonClicked",
+          "parameters": "",
+          "full_sig": "onClearButtonClicked()"
+        },
+        {
+          "name": "onUndoButtonClicked",
+          "parameters": "boolean fromUser, boolean texturize",
+          "full_sig": "onUndoButtonClicked(boolean fromUser, boolean texturize)"
+        },
+        {
+          "name": "onUndoPreviewUpdate",
+          "parameters": "int frames",
+          "full_sig": "onUndoPreviewUpdate(int frames)"
+        },
+        {
+          "name": "onPause",
+          "parameters": "",
+          "full_sig": "onPause()"
+        },
+        {
+          "name": "extract",
+          "parameters": "byte[] path, int mode",
+          "full_sig": "extract(byte[] path, int mode)"
+        },
+        {
+          "name": "load",
+          "parameters": "byte[] name",
+          "full_sig": "load(byte[] name)"
+        },
+        {
+          "name": "optimize",
+          "parameters": "byte[] name",
+          "full_sig": "optimize(byte[] name)"
+        },
+        {
+          "name": "save",
+          "parameters": "byte[] name",
+          "full_sig": "save(byte[] name)"
+        },
+        {
+          "name": "saveWithTextures",
+          "parameters": "byte[] name",
+          "full_sig": "saveWithTextures(byte[] name)"
+        },
+        {
+          "name": "setTextureParams",
+          "parameters": "int detail, int res, int count",
+          "full_sig": "setTextureParams(int detail, int res, int count)"
+        },
+        {
+          "name": "texturize",
+          "parameters": "byte[] input, byte[] output, boolean poisson, boolean twoPass",
+          "full_sig": "texturize(byte[] input, byte[] output, boolean poisson, boolean twoPass)"
+        },
+        {
+          "name": "setView",
+          "parameters": "float pitch, float yaw, float x, float y, float z, float o, boolean gyro",
+          "full_sig": "setView(float pitch, float yaw, float x, float y, float z, float o, boolean gyro)"
+        },
+        {
+          "name": "getDistance",
+          "parameters": "float x1, float y1, float x2, float y2",
+          "full_sig": "getDistance(float x1, float y1, float x2, float y2)"
+        },
+        {
+          "name": "getFloorLevel",
+          "parameters": "float x, float y, float z",
+          "full_sig": "getFloorLevel(float x, float y, float z)"
+        },
+        {
+          "name": "getView",
+          "parameters": "int axis",
+          "full_sig": "getView(int axis)"
+        },
+        {
+          "name": "getEvent",
+          "parameters": "",
+          "full_sig": "getEvent()"
+        },
+        {
+          "name": "getScanSize",
+          "parameters": "",
+          "full_sig": "getScanSize()"
+        },
+        {
+          "name": "restore",
+          "parameters": "",
+          "full_sig": "restore()"
+        },
+        {
+          "name": "setPhotoMode",
+          "parameters": "boolean on",
+          "full_sig": "setPhotoMode(boolean on)"
+        },
+        {
+          "name": "applyEffect",
+          "parameters": "int effect, float value, int axis",
+          "full_sig": "applyEffect(int effect, float value, int axis)"
+        },
+        {
+          "name": "previewEffect",
+          "parameters": "int effect, float value, int axis",
+          "full_sig": "previewEffect(int effect, float value, int axis)"
+        },
+        {
+          "name": "showNormals",
+          "parameters": "boolean on",
+          "full_sig": "showNormals(boolean on)"
+        },
+        {
+          "name": "applySelect",
+          "parameters": "float x, float y, boolean triangle",
+          "full_sig": "applySelect(float x, float y, boolean triangle)"
+        },
+        {
+          "name": "completeSelection",
+          "parameters": "boolean inverse",
+          "full_sig": "completeSelection(boolean inverse)"
+        },
+        {
+          "name": "multSelection",
+          "parameters": "boolean increase",
+          "full_sig": "multSelection(boolean increase)"
+        },
+        {
+          "name": "circleSelection",
+          "parameters": "float x, float y, float radius, boolean invert",
+          "full_sig": "circleSelection(float x, float y, float radius, boolean invert)"
+        },
+        {
+          "name": "rectSelection",
+          "parameters": "float x1, float y1, float x2, float y2, boolean invert",
+          "full_sig": "rectSelection(float x1, float y1, float x2, float y2, boolean invert)"
+        },
+        {
+          "name": "animFinished",
+          "parameters": "",
+          "full_sig": "animFinished()"
+        },
+        {
+          "name": "didARjump",
+          "parameters": "",
+          "full_sig": "didARjump()"
+        },
+        {
+          "name": "freezeScan",
+          "parameters": "",
+          "full_sig": "freezeScan()"
+        },
+        {
+          "name": "getFrozenChunkCount",
+          "parameters": "",
+          "full_sig": "getFrozenChunkCount()"
+        },
+        {
+          "name": "unfreezeScan",
+          "parameters": "",
+          "full_sig": "unfreezeScan()"
+        },
+        {
+          "name": "getDepthData",
+          "parameters": "",
+          "full_sig": "getDepthData()"
+        },
+        {
+          "name": "getCameraPose",
+          "parameters": "",
+          "full_sig": "getCameraPose()"
+        },
+        {
+          "name": "getDepthIntrinsics",
+          "parameters": "",
+          "full_sig": "getDepthIntrinsics()"
+        },
+        {
+          "name": "getFrameTimestamp",
+          "parameters": "",
+          "full_sig": "getFrameTimestamp()"
+        },
+        {
+          "name": "getEvent",
+          "parameters": "Resources r",
+          "full_sig": "getEvent(Resources r)"
+        }
+      ],
+      "imports": [
+        "android.content.Context;",
+        "android.content.res.Resources;",
+        "com.lvonasek.arcore3dscanner.R;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Main.java",
+      "size": 29799,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "getARMode",
+          "parameters": "",
+          "full_sig": "getARMode()"
+        },
+        {
+          "name": "initServerStreaming",
+          "parameters": "String serverUrl",
+          "full_sig": "initServerStreaming(String serverUrl)"
+        },
+        {
+          "name": "reconnectServer",
+          "parameters": "",
+          "full_sig": "reconnectServer()"
+        },
+        {
+          "name": "sendDepthFrameToServer",
+          "parameters": "",
+          "full_sig": "sendDepthFrameToServer()"
+        },
+        {
+          "name": "bindAR",
+          "parameters": "",
+          "full_sig": "bindAR()"
+        },
+        {
+          "name": "if",
+          "parameters": "id == R.id.clear_button",
+          "full_sig": "if(id == R.id.clear_button)"
+        },
+        {
+          "name": "if",
+          "parameters": "id == R.id.view_button",
+          "full_sig": "if(id == R.id.view_button)"
+        },
+        {
+          "name": "if",
+          "parameters": "id == R.id.undo_button",
+          "full_sig": "if(id == R.id.undo_button)"
+        },
+        {
+          "name": "if",
+          "parameters": "id == R.id.undo_apply",
+          "full_sig": "if(id == R.id.undo_apply)"
+        },
+        {
+          "name": "getGLView",
+          "parameters": "",
+          "full_sig": "getGLView()"
+        },
+        {
+          "name": "pauseScanning",
+          "parameters": "",
+          "full_sig": "pauseScanning()"
+        },
+        {
+          "name": "setViewerMode",
+          "parameters": "final String filename",
+          "full_sig": "setViewerMode(final String filename)"
+        },
+        {
+          "name": "captureScreenshot",
+          "parameters": "",
+          "full_sig": "captureScreenshot()"
+        },
+        {
+          "name": "save",
+          "parameters": "",
+          "full_sig": "save()"
+        },
+        {
+          "name": "showAndroidBugDialog",
+          "parameters": "",
+          "full_sig": "showAndroidBugDialog()"
+        }
+      ],
+      "imports": [
+        "android.app.ActivityManager;",
+        "android.app.AlertDialog;",
+        "android.app.Dialog;",
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.content.SharedPreferences;",
+        "android.content.pm.ActivityInfo;",
+        "android.graphics.Color;",
+        "android.location.Location;",
+        "android.os.Build;",
+        "android.os.Bundle;",
+        "android.preference.PreferenceManager;",
+        "android.util.DisplayMetrics;",
+        "android.util.Log;",
+        "android.view.Display;",
+        "android.view.KeyEvent;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "android.view.ViewGroup;",
+        "android.view.WindowManager;",
+        "android.widget.Button;",
+        "android.widget.CheckBox;",
+        "android.widget.FrameLayout;",
+        "android.widget.ImageButton;",
+        "android.widget.LinearLayout;",
+        "android.widget.ProgressBar;",
+        "android.widget.RelativeLayout;",
+        "android.widget.SeekBar;",
+        "android.widget.TextView;",
+        "androidx.core.content.FileProvider;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "com.lvonasek.arcore3dscanner.sketchfab.OAuth;",
+        "com.lvonasek.arcore3dscanner.ui.AbstractActivity;",
+        "com.lvonasek.arcore3dscanner.ui.CommonDialogs;",
+        "com.lvonasek.arcore3dscanner.ui.Service;",
+        "com.lvonasek.arcore3dscanner.main.ServerStreamClient;",
+        "com.lvonasek.arcore3dscanner.utils.AppExecutors;",
+        "com.lvonasek.gles.GLESSurfaceView;",
+        "com.lvonasek.record.Recorder;",
+        "com.lvonasek.utils.Compass;",
+        "com.lvonasek.utils.Compatibility;",
+        "com.lvonasek.utils.GPS;",
+        "com.lvonasek.arcore3dscanner.BuildConfig;",
+        "java.io.File;",
+        "java.io.FileOutputStream;",
+        "java.text.SimpleDateFormat;",
+        "java.util.ArrayList;",
+        "java.util.Date;",
+        "javax.microedition.khronos.egl.EGLConfig;",
+        "javax.microedition.khronos.opengles.GL10;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\ServerStreamClient.java",
+      "size": 12401,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "onConnected",
+          "parameters": "",
+          "full_sig": "onConnected()"
+        },
+        {
+          "name": "onDisconnected",
+          "parameters": "",
+          "full_sig": "onDisconnected()"
+        },
+        {
+          "name": "onError",
+          "parameters": "String message",
+          "full_sig": "onError(String message)"
+        },
+        {
+          "name": "onMeshReceived",
+          "parameters": "",
+          "full_sig": ""
+        },
+        {
+          "name": "onFrameAck",
+          "parameters": "int frameId",
+          "full_sig": "onFrameAck(int frameId)"
+        },
+        {
+          "name": "setListener",
+          "parameters": "Listener listener",
+          "full_sig": "setListener(Listener listener)"
+        },
+        {
+          "name": "connect",
+          "parameters": "",
+          "full_sig": "connect()"
+        },
+        {
+          "name": "disconnect",
+          "parameters": "",
+          "full_sig": "disconnect()"
+        },
+        {
+          "name": "isConnected",
+          "parameters": "",
+          "full_sig": "isConnected()"
+        },
+        {
+          "name": "isInitialized",
+          "parameters": "",
+          "full_sig": "isInitialized()"
+        },
+        {
+          "name": "initialize",
+          "parameters": "int width, int height, float fx, float fy, float cx, float cy",
+          "full_sig": "initialize(int width, int height, float fx, float fy, float cx, float cy)"
+        },
+        {
+          "name": "sendFrame",
+          "parameters": "short[] depthData, float[] pose, double timestamp",
+          "full_sig": "sendFrame(short[] depthData, float[] pose, double timestamp)"
+        },
+        {
+          "name": "sendFrame",
+          "parameters": "short[] depthData, byte[] colorData, float[] pose, double timestamp",
+          "full_sig": "sendFrame(short[] depthData, byte[] colorData, float[] pose, double timestamp)"
+        },
+        {
+          "name": "requestMesh",
+          "parameters": "",
+          "full_sig": "requestMesh()"
+        },
+        {
+          "name": "reset",
+          "parameters": "",
+          "full_sig": "reset()"
+        },
+        {
+          "name": "handleMessage",
+          "parameters": "ByteBuffer buffer",
+          "full_sig": "handleMessage(ByteBuffer buffer)"
+        }
+      ],
+      "imports": [
+        "android.os.Handler;",
+        "android.os.HandlerThread;",
+        "android.util.Log;",
+        "org.java_websocket.client.WebSocketClient;",
+        "org.java_websocket.handshake.ServerHandshake;",
+        "org.msgpack.core.MessagePack;",
+        "org.msgpack.core.MessageBufferPacker;",
+        "org.msgpack.core.MessageUnpacker;",
+        "java.net.URI;",
+        "java.nio.ByteBuffer;",
+        "java.util.concurrent.atomic.AtomicBoolean;",
+        "java.util.concurrent.atomic.AtomicInteger;",
+        "net.jpountz.lz4.LZ4Compressor;",
+        "net.jpountz.lz4.LZ4Factory;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\OAuth.java",
+      "size": 2913,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "getToken",
+          "parameters": "",
+          "full_sig": "getToken()"
+        },
+        {
+          "name": "setupPermissions",
+          "parameters": "",
+          "full_sig": "setupPermissions()"
+        }
+      ],
+      "imports": [
+        "android.Manifest;",
+        "android.content.Intent;",
+        "android.content.pm.PackageManager;",
+        "android.graphics.Color;",
+        "android.net.Uri;",
+        "android.os.Bundle;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "com.lvonasek.arcore3dscanner.ui.AbstractActivity;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\Retrofit.java",
+      "size": 2291,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "getRetrofitInstance",
+          "parameters": "",
+          "full_sig": "getRetrofitInstance()"
+        }
+      ],
+      "imports": [
+        "com.google.gson.Gson;",
+        "com.google.gson.GsonBuilder;",
+        "com.google.gson.annotations.SerializedName;",
+        "java.util.List;",
+        "java.util.concurrent.TimeUnit;",
+        "okhttp3.MultipartBody;",
+        "okhttp3.OkHttpClient;",
+        "retrofit2.Call;",
+        "retrofit2.converter.gson.GsonConverterFactory;",
+        "retrofit2.converter.scalars.ScalarsConverterFactory;",
+        "retrofit2.http.Header;",
+        "retrofit2.http.Multipart;",
+        "retrofit2.http.POST;",
+        "retrofit2.http.Part;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\Uploader.java",
+      "size": 6620,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "getDeviceName",
+          "parameters": "",
+          "full_sig": "getDeviceName()"
+        },
+        {
+          "name": "getTags",
+          "parameters": "",
+          "full_sig": "getTags()"
+        },
+        {
+          "name": "publish",
+          "parameters": "",
+          "full_sig": "publish()"
+        }
+      ],
+      "imports": [
+        "android.app.AlertDialog;",
+        "android.graphics.Color;",
+        "android.os.Build;",
+        "android.os.Bundle;",
+        "android.text.Editable;",
+        "android.text.TextWatcher;",
+        "android.view.View;",
+        "android.view.View.OnClickListener;",
+        "android.widget.Button;",
+        "android.widget.CheckBox;",
+        "android.widget.EditText;",
+        "com.google.gson.Gson;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "com.lvonasek.arcore3dscanner.ui.AbstractActivity;",
+        "com.lvonasek.arcore3dscanner.ui.Service;",
+        "org.json.JSONException;",
+        "org.json.JSONObject;",
+        "java.io.File;",
+        "java.io.IOException;",
+        "java.util.ArrayList;",
+        "okhttp3.MediaType;",
+        "okhttp3.MultipartBody;",
+        "okhttp3.RequestBody;",
+        "retrofit2.Call;",
+        "retrofit2.Response;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\AbstractActivity.java",
+      "size": 13490,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "convertDpToPx",
+          "parameters": "float dp",
+          "full_sig": "convertDpToPx(float dp)"
+        },
+        {
+          "name": "convertPxToDp",
+          "parameters": "float px",
+          "full_sig": "convertPxToDp(float px)"
+        },
+        {
+          "name": "deleteOnBackground",
+          "parameters": "File file",
+          "full_sig": "deleteOnBackground(File file)"
+        },
+        {
+          "name": "deleteRecursive",
+          "parameters": "File file",
+          "full_sig": "deleteRecursive(File file)"
+        },
+        {
+          "name": "getNavigationBarHeight",
+          "parameters": "",
+          "full_sig": "getNavigationBarHeight()"
+        },
+        {
+          "name": "getStatusBarHeight",
+          "parameters": "",
+          "full_sig": "getStatusBarHeight()"
+        },
+        {
+          "name": "getNavigationBarColor",
+          "parameters": "",
+          "full_sig": "getNavigationBarColor()"
+        },
+        {
+          "name": "getStatusBarColor",
+          "parameters": "",
+          "full_sig": "getStatusBarColor()"
+        },
+        {
+          "name": "getBackend",
+          "parameters": "Activity context",
+          "full_sig": "getBackend(Activity context)"
+        },
+        {
+          "name": "getResolution",
+          "parameters": "Context context",
+          "full_sig": "getResolution(Context context)"
+        },
+        {
+          "name": "isCameraFeedOn",
+          "parameters": "Context context",
+          "full_sig": "isCameraFeedOn(Context context)"
+        },
+        {
+          "name": "isFaceModeOn",
+          "parameters": "Context context",
+          "full_sig": "isFaceModeOn(Context context)"
+        },
+        {
+          "name": "isProVersion",
+          "parameters": "Context context",
+          "full_sig": "isProVersion(Context context)"
+        },
+        {
+          "name": "isPostProcessLaterOn",
+          "parameters": "Context context",
+          "full_sig": "isPostProcessLaterOn(Context context)"
+        },
+        {
+          "name": "isTofOn",
+          "parameters": "Activity activity",
+          "full_sig": "isTofOn(Activity activity)"
+        },
+        {
+          "name": "isTofSupported",
+          "parameters": "Activity activity",
+          "full_sig": "isTofSupported(Activity activity)"
+        },
+        {
+          "name": "listFiles",
+          "parameters": "File file",
+          "full_sig": "listFiles(File file)"
+        },
+        {
+          "name": "openURL",
+          "parameters": "Activity context, String url",
+          "full_sig": "openURL(Activity context, String url)"
+        },
+        {
+          "name": "setOrientation",
+          "parameters": "boolean portrait, Activity activity",
+          "full_sig": "setOrientation(boolean portrait, Activity activity)"
+        },
+        {
+          "name": "setWindow",
+          "parameters": "int statusBarColor, int navigationBarColor",
+          "full_sig": "setWindow(int statusBarColor, int navigationBarColor)"
+        },
+        {
+          "name": "askForPermissions",
+          "parameters": "String[] permissions",
+          "full_sig": "askForPermissions(String[] permissions)"
+        },
+        {
+          "name": "getModel",
+          "parameters": "File folder",
+          "full_sig": "getModel(File folder)"
+        },
+        {
+          "name": "getPath",
+          "parameters": "boolean migrate",
+          "full_sig": "getPath(boolean migrate)"
+        },
+        {
+          "name": "getTempPath",
+          "parameters": "",
+          "full_sig": "getTempPath()"
+        },
+        {
+          "name": "hasFilesToMigrate",
+          "parameters": "Context context",
+          "full_sig": "hasFilesToMigrate(Context context)"
+        },
+        {
+          "name": "migrate",
+          "parameters": "String olddir, String newdir",
+          "full_sig": "migrate(String olddir, String newdir)"
+        }
+      ],
+      "imports": [
+        "android.app.Activity;",
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.content.SharedPreferences;",
+        "android.content.pm.ActivityInfo;",
+        "android.content.pm.PackageManager;",
+        "android.content.pm.ResolveInfo;",
+        "android.content.res.Resources;",
+        "android.graphics.Color;",
+        "android.net.Uri;",
+        "android.os.Environment;",
+        "android.os.Parcelable;",
+        "android.preference.PreferenceManager;",
+        "android.util.DisplayMetrics;",
+        "android.util.Log;",
+        "android.view.View;",
+        "android.view.WindowManager;",
+        "com.lvonasek.arcore3dscanner.main.Exporter;",
+        "com.lvonasek.utils.Compass;",
+        "com.lvonasek.utils.Compatibility;",
+        "com.lvonasek.utils.IO;",
+        "com.lvonasek.arcore3dscanner.utils.AppExecutors;",
+        "java.io.File;",
+        "java.util.ArrayList;",
+        "java.util.List;",
+        "java.util.concurrent.atomic.AtomicBoolean;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\ArrayAdapterWithIcons.java",
+      "size": 1503,
+      "extension": ".java",
+      "language": "java",
+      "imports": [
+        "android.content.Context;",
+        "android.graphics.drawable.Drawable;",
+        "android.view.LayoutInflater;",
+        "android.view.View;",
+        "android.view.ViewGroup;",
+        "android.widget.BaseAdapter;",
+        "android.widget.ImageView;",
+        "android.widget.TextView;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "java.util.List;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\CommonDialogs.java",
+      "size": 2594,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "confirmDialog",
+          "parameters": "Activity context, int title, Runnable proceed",
+          "full_sig": "confirmDialog(Activity context, int title, Runnable proceed)"
+        },
+        {
+          "name": "setImmersive",
+          "parameters": "AlertDialog d, Activity context",
+          "full_sig": "setImmersive(AlertDialog d, Activity context)"
+        },
+        {
+          "name": "setImmersive",
+          "parameters": "Window window",
+          "full_sig": "setImmersive(Window window)"
+        }
+      ],
+      "imports": [
+        "android.app.Activity;",
+        "android.app.AlertDialog;",
+        "android.content.Context;",
+        "android.content.DialogInterface;",
+        "android.view.View;",
+        "android.view.Window;",
+        "android.view.WindowManager;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileAdapter.java",
+      "size": 18427,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "@SuppressLint",
+          "parameters": "\"UseCompatLoadingForDrawables\"",
+          "full_sig": "@SuppressLint(\"UseCompatLoadingForDrawables\")"
+        },
+        {
+          "name": "hasParent",
+          "parameters": "",
+          "full_sig": "hasParent()"
+        },
+        {
+          "name": "toParent",
+          "parameters": "",
+          "full_sig": "toParent()"
+        },
+        {
+          "name": "loadIcon",
+          "parameters": "String name, ImageView view",
+          "full_sig": "loadIcon(String name, ImageView view)"
+        },
+        {
+          "name": "getPath",
+          "parameters": "",
+          "full_sig": "getPath()"
+        },
+        {
+          "name": "update",
+          "parameters": "",
+          "full_sig": "update()"
+        },
+        {
+          "name": "hasPosition",
+          "parameters": "",
+          "full_sig": "hasPosition()"
+        },
+        {
+          "name": "showPosition",
+          "parameters": "",
+          "full_sig": "showPosition()"
+        },
+        {
+          "name": "rename",
+          "parameters": "",
+          "full_sig": "rename()"
+        },
+        {
+          "name": "setSelected",
+          "parameters": "View selection, int index",
+          "full_sig": "setSelected(View selection, int index)"
+        },
+        {
+          "name": "getSelected",
+          "parameters": "",
+          "full_sig": "getSelected()"
+        },
+        {
+          "name": "hasExtension",
+          "parameters": "",
+          "full_sig": "hasExtension()"
+        },
+        {
+          "name": "forwardTouch",
+          "parameters": "MotionEvent event",
+          "full_sig": "forwardTouch(MotionEvent event)"
+        }
+      ],
+      "imports": [
+        "android.annotation.SuppressLint;",
+        "android.app.AlertDialog;",
+        "android.app.Dialog;",
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.content.SharedPreferences;",
+        "android.graphics.Bitmap;",
+        "android.graphics.BitmapFactory;",
+        "android.graphics.drawable.BitmapDrawable;",
+        "android.graphics.drawable.Drawable;",
+        "android.net.Uri;",
+        "android.os.Build;",
+        "android.preference.PreferenceManager;",
+        "android.view.LayoutInflater;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "android.view.ViewGroup;",
+        "android.widget.BaseAdapter;",
+        "android.widget.GridView;",
+        "android.widget.ImageView;",
+        "android.widget.TextView;",
+        "android.widget.Toast;",
+        "androidx.core.content.FileProvider;",
+        "com.lvonasek.arcore3dscanner.BuildConfig;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "com.lvonasek.arcore3dscanner.main.Exporter;",
+        "com.lvonasek.arcore3dscanner.main.Main;",
+        "com.lvonasek.arcore3dscanner.sketchfab.OAuth;",
+        "com.lvonasek.utils.GestureDetector;",
+        "java.io.File;",
+        "java.io.FileInputStream;",
+        "java.io.FileOutputStream;",
+        "java.io.IOException;",
+        "java.util.ArrayList;",
+        "java.util.Arrays;",
+        "java.util.HashMap;",
+        "java.util.Locale;",
+        "java.util.Objects;",
+        "java.util.Scanner;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileManager.java",
+      "size": 17553,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "@SuppressLint",
+          "parameters": "\"UseCompatLoadingForDrawables\"",
+          "full_sig": "@SuppressLint(\"UseCompatLoadingForDrawables\")"
+        },
+        {
+          "name": "setupPermissions",
+          "parameters": "",
+          "full_sig": "setupPermissions()"
+        },
+        {
+          "name": "showProgress",
+          "parameters": "",
+          "full_sig": "showProgress()"
+        },
+        {
+          "name": "finishScanning",
+          "parameters": "",
+          "full_sig": "finishScanning()"
+        },
+        {
+          "name": "setColumns",
+          "parameters": "int count",
+          "full_sig": "setColumns(int count)"
+        },
+        {
+          "name": "setOptions",
+          "parameters": "int size",
+          "full_sig": "setOptions(int size)"
+        }
+      ],
+      "imports": [
+        "android.Manifest;",
+        "android.annotation.SuppressLint;",
+        "android.app.AlertDialog;",
+        "android.app.Dialog;",
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.content.SharedPreferences;",
+        "android.content.pm.PackageManager;",
+        "android.graphics.Color;",
+        "android.graphics.drawable.Drawable;",
+        "android.net.Uri;",
+        "android.os.Bundle;",
+        "android.preference.PreferenceManager;",
+        "android.text.Html;",
+        "android.util.Log;",
+        "android.view.LayoutInflater;",
+        "android.view.MotionEvent;",
+        "android.view.View;",
+        "android.widget.Button;",
+        "android.widget.CheckBox;",
+        "android.widget.GridView;",
+        "android.widget.LinearLayout;",
+        "android.widget.ProgressBar;",
+        "android.widget.RelativeLayout;",
+        "android.widget.TextView;",
+        "android.widget.Toast;",
+        "com.google.ar.core.ArCoreApk;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "com.lvonasek.arcore3dscanner.main.Exporter;",
+        "com.lvonasek.arcore3dscanner.main.Main;",
+        "com.lvonasek.utils.Compatibility;",
+        "com.lvonasek.utils.IO;",
+        "java.io.File;",
+        "java.text.SimpleDateFormat;",
+        "java.util.ArrayList;",
+        "java.util.Date;",
+        "java.util.Locale;",
+        "java.util.Objects;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FolderAdapter.java",
+      "size": 3803,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "onPathChanged",
+          "parameters": "String path",
+          "full_sig": "onPathChanged(String path)"
+        },
+        {
+          "name": "@SuppressLint",
+          "parameters": "\"UseCompatLoadingForDrawables\"",
+          "full_sig": "@SuppressLint(\"UseCompatLoadingForDrawables\")"
+        },
+        {
+          "name": "addItem",
+          "parameters": "String name",
+          "full_sig": "addItem(String name)"
+        },
+        {
+          "name": "clearItems",
+          "parameters": "",
+          "full_sig": "clearItems()"
+        },
+        {
+          "name": "getPath",
+          "parameters": "",
+          "full_sig": "getPath()"
+        },
+        {
+          "name": "update",
+          "parameters": "",
+          "full_sig": "update()"
+        }
+      ],
+      "imports": [
+        "android.annotation.SuppressLint;",
+        "android.content.Context;",
+        "android.view.LayoutInflater;",
+        "android.view.View;",
+        "android.view.ViewGroup;",
+        "android.widget.BaseAdapter;",
+        "android.widget.TextView;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "com.lvonasek.arcore3dscanner.main.Exporter;",
+        "java.io.File;",
+        "java.util.ArrayList;",
+        "java.util.Arrays;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Initializator.java",
+      "size": 1647,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "getFile",
+          "parameters": "Context context",
+          "full_sig": "getFile(Context context)"
+        },
+        {
+          "name": "hasFileIntent",
+          "parameters": "",
+          "full_sig": "hasFileIntent()"
+        },
+        {
+          "name": "isFirst",
+          "parameters": "",
+          "full_sig": "isFirst()"
+        }
+      ],
+      "imports": [
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.graphics.Color;",
+        "java.io.InputStream;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\RenameDialog.java",
+      "size": 2302,
+      "extension": ".java",
+      "language": "java",
+      "imports": [
+        "android.app.AlertDialog;",
+        "android.util.Log;",
+        "android.widget.EditText;",
+        "android.widget.ListView;",
+        "android.widget.TextView;",
+        "android.widget.Toast;",
+        "com.lvonasek.arcore3dscanner.main.Exporter;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "java.io.File;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Service.java",
+      "size": 4621,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "finish",
+          "parameters": "String link",
+          "full_sig": "finish(String link)"
+        },
+        {
+          "name": "forceState",
+          "parameters": "AbstractActivity activity, String link, int state",
+          "full_sig": "forceState(AbstractActivity activity, String link, int state)"
+        },
+        {
+          "name": "interrupt",
+          "parameters": "",
+          "full_sig": "interrupt()"
+        },
+        {
+          "name": "process",
+          "parameters": "String message, int serviceId, AbstractActivity activity, Runnable runnable",
+          "full_sig": "process(String message, int serviceId, AbstractActivity activity, Runnable runnable)"
+        },
+        {
+          "name": "getLink",
+          "parameters": "Context context",
+          "full_sig": "getLink(Context context)"
+        },
+        {
+          "name": "getMessage",
+          "parameters": "",
+          "full_sig": "getMessage()"
+        },
+        {
+          "name": "getRunning",
+          "parameters": "Context context",
+          "full_sig": "getRunning(Context context)"
+        },
+        {
+          "name": "setMessage",
+          "parameters": "String msg",
+          "full_sig": "setMessage(String msg)"
+        },
+        {
+          "name": "setMessageNotification",
+          "parameters": "String msg",
+          "full_sig": "setMessageNotification(String msg)"
+        },
+        {
+          "name": "reset",
+          "parameters": "Context context",
+          "full_sig": "reset(Context context)"
+        }
+      ],
+      "imports": [
+        "android.content.Context;",
+        "android.content.Intent;",
+        "android.content.SharedPreferences;",
+        "android.os.IBinder;",
+        "android.preference.PreferenceManager;",
+        "android.util.Log;",
+        "com.lvonasek.arcore3dscanner.main.JNI;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Settings.java",
+      "size": 4065,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "keepUpdated",
+          "parameters": "ListPreference pref",
+          "full_sig": "keepUpdated(ListPreference pref)"
+        },
+        {
+          "name": "getNavigationBarColor",
+          "parameters": "",
+          "full_sig": "getNavigationBarColor()"
+        },
+        {
+          "name": "getStatusBarColor",
+          "parameters": "",
+          "full_sig": "getStatusBarColor()"
+        },
+        {
+          "name": "@SuppressLint",
+          "parameters": "\"UseCompatLoadingForDrawables\"",
+          "full_sig": "@SuppressLint(\"UseCompatLoadingForDrawables\")"
+        }
+      ],
+      "imports": [
+        "android.annotation.SuppressLint;",
+        "android.graphics.Color;",
+        "android.os.Bundle;",
+        "android.preference.CheckBoxPreference;",
+        "android.preference.ListPreference;",
+        "android.preference.Preference;",
+        "android.preference.PreferenceActivity;",
+        "android.preference.PreferenceScreen;",
+        "android.view.View;",
+        "android.view.Window;",
+        "android.view.WindowManager;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "java.util.Objects;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Uploader.java",
+      "size": 3675,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "onShowFileChooser",
+          "parameters": "WebView webView, ValueCallback\u003cUri[]\u003e callback, WebChromeClient.FileChooserParams params",
+          "full_sig": "onShowFileChooser(WebView webView, ValueCallback\u003cUri[]\u003e callback, WebChromeClient.FileChooserParams params)"
+        },
+        {
+          "name": "setupPermissions",
+          "parameters": "",
+          "full_sig": "setupPermissions()"
+        }
+      ],
+      "imports": [
+        "android.Manifest;",
+        "android.app.DownloadManager;",
+        "android.content.Intent;",
+        "android.content.pm.PackageManager;",
+        "android.graphics.Color;",
+        "android.net.Uri;",
+        "android.os.Bundle;",
+        "android.os.Environment;",
+        "android.webkit.CookieManager;",
+        "android.webkit.DownloadListener;",
+        "android.webkit.URLUtil;",
+        "android.webkit.ValueCallback;",
+        "android.webkit.WebChromeClient;",
+        "android.webkit.WebSettings;",
+        "android.webkit.WebView;",
+        "android.webkit.WebViewClient;",
+        "androidx.core.content.FileProvider;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "java.io.File;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\utils\\AppExecutors.java",
+      "size": 2761,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "initExecutors",
+          "parameters": "",
+          "full_sig": "initExecutors()"
+        },
+        {
+          "name": "getInstance",
+          "parameters": "",
+          "full_sig": "getInstance()"
+        },
+        {
+          "name": "isShutdown",
+          "parameters": "",
+          "full_sig": "isShutdown()"
+        },
+        {
+          "name": "diskIO",
+          "parameters": "",
+          "full_sig": "diskIO()"
+        },
+        {
+          "name": "networkIO",
+          "parameters": "",
+          "full_sig": "networkIO()"
+        },
+        {
+          "name": "computation",
+          "parameters": "",
+          "full_sig": "computation()"
+        },
+        {
+          "name": "shutdown",
+          "parameters": "",
+          "full_sig": "shutdown()"
+        },
+        {
+          "name": "executeDiskIO",
+          "parameters": "Runnable task",
+          "full_sig": "executeDiskIO(Runnable task)"
+        },
+        {
+          "name": "executeNetworkIO",
+          "parameters": "Runnable task",
+          "full_sig": "executeNetworkIO(Runnable task)"
+        },
+        {
+          "name": "executeComputation",
+          "parameters": "Runnable task",
+          "full_sig": "executeComputation(Runnable task)"
+        }
+      ],
+      "imports": [
+        "java.util.concurrent.ExecutorService;",
+        "java.util.concurrent.Executors;",
+        "java.util.concurrent.RejectedExecutionException;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\CardboardActivity.java",
+      "size": 1378,
+      "extension": ".java",
+      "language": "java",
+      "imports": [
+        "android.view.KeyEvent;",
+        "com.google.vr.sdk.base.Viewport;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\DaydreamActivity.java",
+      "size": 1722,
+      "extension": ".java",
+      "language": "java",
+      "imports": [
+        "com.google.vr.sdk.base.Viewport;",
+        "com.google.vr.sdk.controller.Controller;",
+        "com.google.vr.sdk.controller.ControllerManager;"
+      ]
+    },
+    {
+      "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\VRActivity.java",
+      "size": 3159,
+      "extension": ".java",
+      "language": "java",
+      "functions": [
+        {
+          "name": "nativeLoadModel",
+          "parameters": "String filename",
+          "full_sig": "nativeLoadModel(String filename)"
+        },
+        {
+          "name": "nativeInitializeGl",
+          "parameters": "",
+          "full_sig": "nativeInitializeGl()"
+        },
+        {
+          "name": "nativeDrawFrame",
+          "parameters": "float[] matrix",
+          "full_sig": "nativeDrawFrame(float[] matrix)"
+        },
+        {
+          "name": "nativeOnTriggerEvent",
+          "parameters": "float x, float y, float z, float[] matrix",
+          "full_sig": "nativeOnTriggerEvent(float x, float y, float z, float[] matrix)"
+        },
+        {
+          "name": "nativeUpdate",
+          "parameters": "",
+          "full_sig": "nativeUpdate()"
+        }
+      ],
+      "imports": [
+        "android.opengl.GLES20;",
+        "android.opengl.Matrix;",
+        "android.os.Bundle;",
+        "com.google.vr.sdk.base.AndroidCompat;",
+        "com.google.vr.sdk.base.Eye;",
+        "com.google.vr.sdk.base.GvrActivity;",
+        "com.google.vr.sdk.base.GvrView;",
+        "com.google.vr.sdk.base.HeadTransform;",
+        "com.google.vr.sdk.base.Viewport;",
+        "com.lvonasek.arcore3dscanner.R;",
+        "javax.microedition.khronos.egl.EGLConfig;"
+      ]
+    },
+    {
+      "path": "main\\jni\\Android.mk",
+      "size": 3423,
+      "extension": ".mk"
+    },
+    {
+      "path": "main\\jni\\Application.mk",
+      "size": 1921,
+      "extension": ".mk"
+    },
+    {
+      "path": "main\\jni\\app.cc",
+      "size": 48726,
+      "extension": ".cc",
+      "language": "cpp",
+      "functions": [
+        {
+          "name": "AnalyseCallback",
+          "parameters": "int current, int count",
+          "full_sig": "AnalyseCallback(int current, int count)"
+        },
+        {
+          "name": "App::App",
+          "parameters": "",
+          "full_sig": "App::App()"
+        },
+        {
+          "name": "App::OnARServiceConnected",
+          "parameters": "",
+          "full_sig": ""
+        },
+        {
+          "name": "App::OnSurfaceChanged",
+          "parameters": "int width, int height, bool fullhd",
+          "full_sig": "App::OnSurfaceChanged(int width, int height, bool fullhd)"
+        },
+        {
+          "name": "App::OnDrawFrame",
+          "parameters": "bool facemode, float compassYaw, int viewmode, bool anchors, bool grid, bool smooth",
+          "full_sig": "App::OnDrawFrame(bool facemode, float compassYaw, int viewmode, bool anchors, bool grid, bool smooth)"
+        },
+        {
+          "name": "App::OnDrawScan",
+          "parameters": "glm::vec3 pos, bool zoomable",
+          "full_sig": "App::OnDrawScan(glm::vec3 pos, bool zoomable)"
+        },
+        {
+          "name": "App::OnToggleButtonClicked",
+          "parameters": "bool t3dr_is_running",
+          "full_sig": "App::OnToggleButtonClicked(bool t3dr_is_running)"
+        },
+        {
+          "name": "App::OnClearButtonClicked",
+          "parameters": "",
+          "full_sig": "App::OnClearButtonClicked()"
+        },
+        {
+          "name": "App::OnUndoButtonClicked",
+          "parameters": "bool fromUser, bool texturize",
+          "full_sig": "App::OnUndoButtonClicked(bool fromUser, bool texturize)"
+        },
+        {
+          "name": "App::OnUndoPreviewUpdate",
+          "parameters": "int frames",
+          "full_sig": "App::OnUndoPreviewUpdate(int frames)"
+        },
+        {
+          "name": "App::OnPause",
+          "parameters": "",
+          "full_sig": "App::OnPause()"
+        },
+        {
+          "name": "App::FreezeScan",
+          "parameters": "",
+          "full_sig": "App::FreezeScan()"
+        },
+        {
+          "name": "App::GetFrozenChunkCount",
+          "parameters": "",
+          "full_sig": "App::GetFrozenChunkCount()"
+        },
+        {
+          "name": "App::UnfreezeScan",
+          "parameters": "",
+          "full_sig": "App::UnfreezeScan()"
+        },
+        {
+          "name": "App::GetDepthData",
+          "parameters": "",
+          "full_sig": "App::GetDepthData()"
+        },
+        {
+          "name": "App::GetCameraPose",
+          "parameters": "",
+          "full_sig": "App::GetCameraPose()"
+        },
+        {
+          "name": "App::GetDepthIntrinsics",
+          "parameters": "",
+          "full_sig": "App::GetDepthIntrinsics()"
+        },
+        {
+          "name": "App::GetFrameTimestamp",
+          "parameters": "",
+          "full_sig": "App::GetFrameTimestamp()"
+        },
+        {
+          "name": "App::Extract",
+          "parameters": "std::string path, int mode",
+          "full_sig": "App::Extract(std::string path, int mode)"
+        },
+        {
+          "name": "App::GetEvent",
+          "parameters": "",
+          "full_sig": "App::GetEvent()"
+        },
+        {
+          "name": "App::SetEvent",
+          "parameters": "std::string value",
+          "full_sig": "App::SetEvent(std::string value)"
+        },
+        {
+          "name": "App::Load",
+          "parameters": "std::string filename",
+          "full_sig": "App::Load(std::string filename)"
+        },
+        {
+          "name": "App::Optimize",
+          "parameters": "std::string filename",
+          "full_sig": "App::Optimize(std::string filename)"
+        },
+        {
+          "name": "App::Save",
+          "parameters": "std::string filename",
+          "full_sig": "App::Save(std::string filename)"
+        },
+        {
+          "name": "App::SaveWithTextures",
+          "parameters": "std::string filename",
+          "full_sig": "App::SaveWithTextures(std::string filename)"
+        },
+        {
+          "name": "App::SetTextureParams",
+          "parameters": "int detail, int res, int count",
+          "full_sig": "App::SetTextureParams(int detail, int res, int count)"
+        },
+        {
+          "name": "App::Texturize",
+          "parameters": "std::string input, std::string output, bool poisson, bool twoPass",
+          "full_sig": "App::Texturize(std::string input, std::string output, bool poisson, bool twoPass)"
+        },
+        {
+          "name": "App::GetDistance",
+          "parameters": "float x1, float y1, float x2, float y2",
+          "full_sig": "App::GetDistance(float x1, float y1, float x2, float y2)"
+        },
+        {
+          "name": "App::GetFloorLevel",
+          "parameters": "float x, float y, float z",
+          "full_sig": "App::GetFloorLevel(float x, float y, float z)"
+        },
+        {
+          "name": "App::Backup",
+          "parameters": "",
+          "full_sig": "App::Backup()"
+        },
+        {
+          "name": "App::Restore",
+          "parameters": "",
+          "full_sig": "App::Restore()"
+        },
+        {
+          "name": "App::ApplyEffect",
+          "parameters": "Effector::Effect effect, float value, int axis",
+          "full_sig": "App::ApplyEffect(Effector::Effect effect, float value, int axis)"
+        },
+        {
+          "name": "App::PreviewEffect",
+          "parameters": "Effector::Effect effect, float value, int axis",
+          "full_sig": "App::PreviewEffect(Effector::Effect effect, float value, int axis)"
+        },
+        {
+          "name": "App::ShowNormals",
+          "parameters": "bool on",
+          "full_sig": "App::ShowNormals(bool on)"
+        },
+        {
+          "name": "App::ApplySelection",
+          "parameters": "float x, float y, bool triangle",
+          "full_sig": "App::ApplySelection(float x, float y, bool triangle)"
+        },
+        {
+          "name": "App::CompleteSelection",
+          "parameters": "bool inverse",
+          "full_sig": "App::CompleteSelection(bool inverse)"
+        },
+        {
+          "name": "App::MultSelection",
+          "parameters": "bool increase",
+          "full_sig": "App::MultSelection(bool increase)"
+        },
+        {
+          "name": "App::CircleSelection",
+          "parameters": "float x, float y, float radius, bool invert",
+          "full_sig": "App::CircleSelection(float x, float y, float radius, bool invert)"
+        },
+        {
+          "name": "App::RectSelection",
+          "parameters": "float x1, float y1, float x2, float y2, bool invert",
+          "full_sig": "App::RectSelection(float x1, float y1, float x2, float y2, bool invert)"
+        },
+        {
+          "name": "App::SetView",
+          "parameters": "float p, float y, float mx, float my, float mz, float o, bool g",
+          "full_sig": "App::SetView(float p, float y, float mx, float my, float mz, float o, bool g)"
+        },
+        {
+          "name": "App::AnimFinished",
+          "parameters": "",
+          "full_sig": "App::AnimFinished()"
+        },
+        {
+          "name": "App::DidARJump",
+          "parameters": "",
+          "full_sig": "App::DidARJump()"
+        },
+        {
+          "name": "App::GetView",
+          "parameters": "int axis",
+          "full_sig": "App::GetView(int axis)"
+        },
+        {
+          "name": "App::GetScanSize",
+          "parameters": "",
+          "full_sig": "App::GetScanSize()"
+        },
+        {
+          "name": "App::SetPhotoMode",
+          "parameters": "bool on",
+          "full_sig": "App::SetPhotoMode(bool on)"
+        },
+        {
+          "name": "jbyteArray2string",
+          "parameters": "JNIEnv* env, jbyteArray data",
+          "full_sig": "jbyteArray2string(JNIEnv* env, jbyteArray data)"
+        }
+      ],
+      "imports": [
+        "cstdio",
+        "sstream",
+        "arcore/service.h",
+        "exporter/csvposes.h",
+        "exporter/floorpln.h",
+        "postproc/optimizer.h",
+        "postproc/poisson.h",
+        "postproc/texturize.h",
+        "zconf.h",
+        "app.h"
+      ]
+    },
+    {
+      "path": "main\\jni\\app.h",
+      "size": 3446,
+      "extension": ".h",
+      "language": "c",
+      "imports": [
+        "jni.h",
+        "string",
+        "editor/effector.h",
+        "editor/selector.h",
+        "thread/reconstr.h"
+      ]
+    },
+    {
+      "path": "main\\jni\\renderer.cc",
+      "size": 4536,
+      "extension": ".cc",
+      "language": "cpp",
+      "functions": [
+        {
+          "name": "Renderer::Load",
+          "parameters": "std::string filename",
+          "full_sig": "Renderer::Load(std::string filename)"
+        },
+        {
+          "name": "Renderer::InitializeGl",
+          "parameters": "",
+          "full_sig": "Renderer::InitializeGl()"
+        },
+        {
+          "name": "Renderer::OnTriggerEvent",
+          "parameters": "float x, float y, float z, float* view",
+          "full_sig": "Renderer::OnTriggerEvent(float x, float y, float z, float* view)"
+        },
+        {
+          "name": "Renderer::DrawModel",
+          "parameters": "float* view",
+          "full_sig": "Renderer::DrawModel(float* view)"
+        },
+        {
+          "name": "Renderer::Update",
+          "parameters": "",
+          "full_sig": "Renderer::Update()"
+        },
+        {
+          "name": "JNI_METHOD",
+          "parameters": "void, nativeLoadModel",
+          "full_sig": "JNI_METHOD(void, nativeLoadModel)"
+        },
+        {
+          "name": "JNI_METHOD",
+          "parameters": "void, nativeInitializeGl",
+          "full_sig": "JNI_METHOD(void, nativeInitializeGl)"
+        },
+        {
+          "name": "JNI_METHOD",
+          "parameters": "void, nativeOnTriggerEvent",
+          "full_sig": "JNI_METHOD(void, nativeOnTriggerEvent)"
+        },
+        {
+          "name": "JNI_METHOD",
+          "parameters": "void, nativeDrawFrame",
+          "full_sig": "JNI_METHOD(void, nativeDrawFrame)"
+        },
+        {
+          "name": "JNI_METHOD",
+          "parameters": "void, nativeUpdate",
+          "full_sig": "JNI_METHOD(void, nativeUpdate)"
+        }
+      ],
+      "imports": [
+        "renderer.h"
+      ]
+    },
+    {
+      "path": "main\\jni\\renderer.h",
+      "size": 736,
+      "extension": ".h",
+      "language": "c",
+      "imports": [
+        "GLES2/gl2.h",
+        "jni.h",
+        "memory",
+        "string",
+        "vector",
+        "gl/scene.h"
+      ]
+    },
+    {
+      "path": "main\\libs\\sdk-base-1.190.0.aar",
+      "size": 4913785,
+      "extension": ".aar"
+    },
+    {
+      "path": "main\\res\\anim\\slide_out_left.xml",
+      "size": 337,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\drawable\\background_button.xml",
+      "size": 389,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\drawable\\background_button_normal.xml",
+      "size": 570,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\drawable\\background_button_normal_red.xml",
+      "size": 570,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\drawable\\background_button_red.xml",
+      "size": 401,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\drawable\\background_button_selected.xml",
+      "size": 570,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\drawable\\background_button_selected_red.xml",
+      "size": 569,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\drawable\\background_dialog.xml",
+      "size": 503,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\drawable\\background_menu.xml",
+      "size": 408,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\drawable\\background_settings.xml",
+      "size": 338,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_arrow_down.png",
+      "size": 18677,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_arrow_up.png",
+      "size": 17979,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_back_small.png",
+      "size": 851,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_battery_0.png",
+      "size": 11991,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_battery_100.png",
+      "size": 12052,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_battery_20.png",
+      "size": 12009,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_battery_40.png",
+      "size": 12014,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_battery_60.png",
+      "size": 12021,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_battery_80.png",
+      "size": 12045,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_capture.png",
+      "size": 19619,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_cardboard.png",
+      "size": 9214,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_dataset.png",
+      "size": 6516,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_delete.png",
+      "size": 10087,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_delete_small.png",
+      "size": 15292,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_editor.png",
+      "size": 13715,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_folder.png",
+      "size": 13901,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_folder_new.png",
+      "size": 17906,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_folder_up.png",
+      "size": 16722,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_glass.png",
+      "size": 41423,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_hand_phone.png",
+      "size": 3544,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_launcher.png",
+      "size": 157261,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_memory.png",
+      "size": 5266,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_mode2d.png",
+      "size": 7187,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_mode3d.png",
+      "size": 10196,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_model_icon.png",
+      "size": 7555,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_modeorbit.png",
+      "size": 18607,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_pause.png",
+      "size": 6435,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_position_small.png",
+      "size": 8193,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_record.png",
+      "size": 12337,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_rename_small.png",
+      "size": 10484,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_save.png",
+      "size": 10014,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_save_small.png",
+      "size": 547,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_settings.png",
+      "size": 8434,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_share.png",
+      "size": 25803,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_share_small.png",
+      "size": 9065,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_sketchfab.png",
+      "size": 2797,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_type_dataset.png",
+      "size": 17288,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_type_face.png",
+      "size": 15111,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_type_floorplan.png",
+      "size": 14282,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_type_pointcloud.png",
+      "size": 8510,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_type_scan.png",
+      "size": 7379,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\drawable\\ic_undo.png",
+      "size": 15623,
+      "extension": ".png"
+    },
+    {
+      "path": "main\\res\\layout\\activity_files.xml",
+      "size": 6556,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\layout\\activity_main.xml",
+      "size": 14666,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\layout\\activity_sketchfab.xml",
+      "size": 3545,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\layout\\activity_upload.xml",
+      "size": 423,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\layout\\dialog_rename.xml",
+      "size": 1655,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\layout\\dialog_scan.xml",
+      "size": 1010,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\layout\\dialog_start.xml",
+      "size": 2769,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\layout\\view_editor.xml",
+      "size": 17262,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\layout\\view_folder.xml",
+      "size": 813,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\layout\\view_item.xml",
+      "size": 1586,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\layout\\view_texticon.xml",
+      "size": 876,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\layout\\vr.xml",
+      "size": 553,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\values\\array.xml",
+      "size": 1057,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\values\\id.xml",
+      "size": 1537,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\values\\strings.xml",
+      "size": 13944,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\values-cs\\strings.xml",
+      "size": 13263,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\values-de\\strings.xml",
+      "size": 13706,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\values-es\\strings.xml",
+      "size": 13699,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\values-fr\\strings.xml",
+      "size": 14294,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\values-hu\\strings.xml",
+      "size": 13864,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\values-it\\strings.xml",
+      "size": 13840,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\values-ro\\strings.xml",
+      "size": 13656,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\values-zh\\strings.xml",
+      "size": 12108,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\xml\\network_security_config.xml",
+      "size": 247,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\xml\\provider_paths.xml",
+      "size": 169,
+      "extension": ".xml"
+    },
+    {
+      "path": "main\\res\\xml\\settings.xml",
+      "size": 8676,
+      "extension": ".xml"
+    }
+  ],
+  "dependencies": {
+    "internal_files": [
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Exporter.java",
+        "language": "java",
+        "functions": [
+          "compressModel",
+          "export",
+          "isFolder",
+          "getModelType",
+          "getMtlResource",
+          "getObjResources",
+          "makeStructure"
+        ],
+        "imports": [
+          "android.util.Log;",
+          "com.lvonasek.arcore3dscanner.ui.AbstractActivity;",
+          "com.lvonasek.utils.IO;",
+          "java.io.File;",
+          "java.io.FileInputStream;",
+          "java.util.ArrayList;",
+          "java.util.Collections;",
+          "java.util.HashSet;",
+          "java.util.Scanner;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Settings.java",
+        "language": "java",
+        "functions": [
+          "onCreate",
+          "onPause",
+          "onResume",
+          "keepUpdated",
+          "getNavigationBarColor",
+          "getStatusBarColor",
+          "@SuppressLint"
+        ],
+        "imports": [
+          "android.annotation.SuppressLint;",
+          "android.graphics.Color;",
+          "android.os.Bundle;",
+          "android.preference.CheckBoxPreference;",
+          "android.preference.ListPreference;",
+          "android.preference.Preference;",
+          "android.preference.PreferenceActivity;",
+          "android.preference.PreferenceScreen;",
+          "android.view.View;",
+          "android.view.Window;",
+          "android.view.WindowManager;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "java.util.Objects;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\CommonDialogs.java",
+        "language": "java",
+        "functions": [
+          "confirmDialog",
+          "onClick",
+          "setImmersive"
+        ],
+        "imports": [
+          "android.app.Activity;",
+          "android.app.AlertDialog;",
+          "android.content.Context;",
+          "android.content.DialogInterface;",
+          "android.view.View;",
+          "android.view.Window;",
+          "android.view.WindowManager;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\DistanceMeasuring.java",
+        "language": "java",
+        "functions": [
+          "onDraw",
+          "drawArrow",
+          "reset",
+          "setGesture"
+        ],
+        "imports": [
+          "android.content.Context;",
+          "android.graphics.Canvas;",
+          "android.graphics.Color;",
+          "android.graphics.Paint;",
+          "android.graphics.Paint.Align;",
+          "android.graphics.Paint.Style;",
+          "android.util.AttributeSet;",
+          "android.view.View;",
+          "java.util.Locale;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Initializator.java",
+        "language": "java",
+        "functions": [
+          "getFile",
+          "getNavigationBarColor",
+          "getStatusBarColor",
+          "hasFileIntent",
+          "onResume",
+          "isFirst"
+        ],
+        "imports": [
+          "android.content.Context;",
+          "android.content.Intent;",
+          "android.graphics.Color;",
+          "java.io.InputStream;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\AbstractActivity.java",
+        "language": "java",
+        "functions": [
+          "convertDpToPx",
+          "convertPxToDp",
+          "deleteOnBackground",
+          "deleteRecursive",
+          "getNavigationBarHeight",
+          "getStatusBarHeight",
+          "getNavigationBarColor",
+          "getStatusBarColor",
+          "getBackend",
+          "getResolution",
+          "isCameraFeedOn",
+          "isFaceModeOn",
+          "isProVersion",
+          "isPostProcessLaterOn",
+          "isTofOn",
+          "isTofSupported",
+          "listFiles",
+          "openURL",
+          "setOrientation",
+          "onPause",
+          "onResume",
+          "setWindow",
+          "onRequestPermissionsResult",
+          "askForPermissions",
+          "getModel",
+          "getPath",
+          "getTempPath",
+          "hasFilesToMigrate",
+          "migrate"
+        ],
+        "imports": [
+          "android.app.Activity;",
+          "android.content.Context;",
+          "android.content.Intent;",
+          "android.content.SharedPreferences;",
+          "android.content.pm.ActivityInfo;",
+          "android.content.pm.PackageManager;",
+          "android.content.pm.ResolveInfo;",
+          "android.content.res.Resources;",
+          "android.graphics.Color;",
+          "android.net.Uri;",
+          "android.os.Environment;",
+          "android.os.Parcelable;",
+          "android.preference.PreferenceManager;",
+          "android.util.DisplayMetrics;",
+          "android.util.Log;",
+          "android.view.View;",
+          "android.view.WindowManager;",
+          "com.lvonasek.arcore3dscanner.main.Exporter;",
+          "com.lvonasek.utils.Compass;",
+          "com.lvonasek.utils.Compatibility;",
+          "com.lvonasek.utils.IO;",
+          "com.lvonasek.arcore3dscanner.utils.AppExecutors;",
+          "java.io.File;",
+          "java.util.ArrayList;",
+          "java.util.List;",
+          "java.util.concurrent.atomic.AtomicBoolean;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\CameraControl.java",
+        "language": "java",
+        "functions": [
+          "IsAcceptingRotation",
+          "OnDrag",
+          "OnTwoFingerMove",
+          "OnTwoFingerRotation",
+          "OnPinchToZoom",
+          "Move",
+          "createBitmapFromGLSurface",
+          "captureBitmap",
+          "enterVR",
+          "getMoveFactor",
+          "getViewMode",
+          "getVRButton",
+          "isViewMode",
+          "onDoubleClick",
+          "restoreView",
+          "setOffset",
+          "setViewerMode",
+          "updateButtons",
+          "updateCapture",
+          "updateMotion",
+          "updateView",
+          "updateViewYaw"
+        ],
+        "imports": [
+          "android.content.Intent;",
+          "android.graphics.Bitmap;",
+          "android.graphics.Point;",
+          "android.net.Uri;",
+          "android.view.Display;",
+          "android.view.MotionEvent;",
+          "android.view.View;",
+          "android.widget.ImageButton;",
+          "androidx.core.content.FileProvider;",
+          "com.lvonasek.arcore3dscanner.BuildConfig;",
+          "com.lvonasek.arcore3dscanner.ui.AbstractActivity;",
+          "com.lvonasek.arcore3dscanner.vr.CardboardActivity;",
+          "com.lvonasek.arcore3dscanner.vr.DaydreamActivity;",
+          "com.lvonasek.gles.GLESSurfaceView;",
+          "com.lvonasek.record.Recorder;",
+          "com.lvonasek.utils.Compatibility;",
+          "com.lvonasek.utils.GestureDetector;",
+          "java.io.File;",
+          "java.io.FileOutputStream;",
+          "java.nio.IntBuffer;",
+          "javax.microedition.khronos.opengles.GL10;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Indicators.java",
+        "language": "java",
+        "functions": [
+          "disable",
+          "setOverrideMessage",
+          "getBatteryPercentage",
+          "run",
+          "updateText"
+        ],
+        "imports": [
+          "android.app.Activity;",
+          "android.app.ActivityManager;",
+          "android.content.Context;",
+          "android.content.Intent;",
+          "android.content.IntentFilter;",
+          "android.graphics.Color;",
+          "android.os.BatteryManager;",
+          "android.view.View;",
+          "android.widget.LinearLayout;",
+          "android.widget.TextView;",
+          "com.lvonasek.arcore3dscanner.ui.AbstractActivity;"
+        ]
+      },
+      {
+        "path": "main\\jni\\renderer.cc",
+        "language": "cpp",
+        "functions": [
+          "JNI_METHOD"
+        ],
+        "imports": [
+          "renderer.h"
+        ]
+      },
+      {
+        "path": "main\\jni\\app.h",
+        "language": "c",
+        "functions": [
+          "App"
+        ],
+        "imports": [
+          "jni.h",
+          "string",
+          "editor/effector.h",
+          "editor/selector.h",
+          "thread/reconstr.h"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\Uploader.java",
+        "language": "java",
+        "functions": [
+          "onCreate",
+          "afterTextChanged",
+          "beforeTextChanged",
+          "onTextChanged",
+          "onClick",
+          "getDeviceName",
+          "getTags",
+          "publish",
+          "getNavigationBarColor",
+          "getStatusBarColor"
+        ],
+        "imports": [
+          "android.app.AlertDialog;",
+          "android.graphics.Color;",
+          "android.os.Build;",
+          "android.os.Bundle;",
+          "android.text.Editable;",
+          "android.text.TextWatcher;",
+          "android.view.View;",
+          "android.view.View.OnClickListener;",
+          "android.widget.Button;",
+          "android.widget.CheckBox;",
+          "android.widget.EditText;",
+          "com.google.gson.Gson;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "com.lvonasek.arcore3dscanner.ui.AbstractActivity;",
+          "com.lvonasek.arcore3dscanner.ui.Service;",
+          "org.json.JSONException;",
+          "org.json.JSONObject;",
+          "java.io.File;",
+          "java.io.IOException;",
+          "java.util.ArrayList;",
+          "okhttp3.MediaType;",
+          "okhttp3.MultipartBody;",
+          "okhttp3.RequestBody;",
+          "retrofit2.Call;",
+          "retrofit2.Response;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\VRActivity.java",
+        "language": "java",
+        "functions": [
+          "onCreate",
+          "onRendererShutdown",
+          "onSurfaceChanged",
+          "onSurfaceCreated",
+          "onNewFrame",
+          "onDrawEye",
+          "onFinishFrame",
+          "nativeLoadModel",
+          "nativeInitializeGl",
+          "nativeDrawFrame",
+          "nativeOnTriggerEvent",
+          "nativeUpdate",
+          "run"
+        ],
+        "imports": [
+          "android.opengl.GLES20;",
+          "android.opengl.Matrix;",
+          "android.os.Bundle;",
+          "com.google.vr.sdk.base.AndroidCompat;",
+          "com.google.vr.sdk.base.Eye;",
+          "com.google.vr.sdk.base.GvrActivity;",
+          "com.google.vr.sdk.base.GvrView;",
+          "com.google.vr.sdk.base.HeadTransform;",
+          "com.google.vr.sdk.base.Viewport;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "javax.microedition.khronos.egl.EGLConfig;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\DaydreamActivity.java",
+        "language": "java",
+        "functions": [
+          "onStart",
+          "onApiStatusChanged",
+          "onRecentered",
+          "onStop",
+          "onFinishFrame",
+          "run"
+        ],
+        "imports": [
+          "com.google.vr.sdk.base.Viewport;",
+          "com.google.vr.sdk.controller.Controller;",
+          "com.google.vr.sdk.controller.ControllerManager;"
+        ]
+      },
+      {
+        "path": "main\\jni\\renderer.h",
+        "language": "c",
+        "functions": [
+          "DrawModel"
+        ],
+        "imports": [
+          "GLES2/gl2.h",
+          "jni.h",
+          "memory",
+          "string",
+          "vector",
+          "gl/scene.h"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\ServerStreamClient.java",
+        "language": "java",
+        "functions": [
+          "onConnected",
+          "onDisconnected",
+          "onError",
+          "onMeshReceived",
+          "onFrameAck",
+          "setListener",
+          "connect",
+          "onOpen",
+          "onMessage",
+          "onClose",
+          "disconnect",
+          "isConnected",
+          "isInitialized",
+          "initialize",
+          "sendFrame",
+          "requestMesh",
+          "reset",
+          "handleMessage"
+        ],
+        "imports": [
+          "android.os.Handler;",
+          "android.os.HandlerThread;",
+          "android.util.Log;",
+          "org.java_websocket.client.WebSocketClient;",
+          "org.java_websocket.handshake.ServerHandshake;",
+          "org.msgpack.core.MessagePack;",
+          "org.msgpack.core.MessageBufferPacker;",
+          "org.msgpack.core.MessageUnpacker;",
+          "java.net.URI;",
+          "java.nio.ByteBuffer;",
+          "java.util.concurrent.atomic.AtomicBoolean;",
+          "java.util.concurrent.atomic.AtomicInteger;",
+          "net.jpountz.lz4.LZ4Compressor;",
+          "net.jpountz.lz4.LZ4Factory;"
+        ]
+      },
+      {
+        "path": "main\\jni\\app.cc",
+        "language": "cpp",
+        "functions": [
+          "AnalyseCallback",
+          "jbyteArray2string",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_onARServiceConnected",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_onGlSurfaceChanged",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_onGlSurfaceDrawFrame",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_onToggleButtonClicked",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_onClearButtonClicked",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_onUndoButtonClicked",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_onUndoPreviewUpdate",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_onPause",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_extract",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_load",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_optimize",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_save",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_saveWithTextures",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_setTextureParams",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_texturize",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_setView",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_getDistance",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_getFloorLevel",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_restore",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_applyEffect",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_previewEffect",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_applySelect",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_completeSelection",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_multSelection",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_circleSelection",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_rectSelection",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_showNormals",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_animFinished",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_didARjump",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_getView",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_getEvent",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_setPhotoMode",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_getScanSize",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_freezeScan",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_getFrozenChunkCount",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_unfreezeScan",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_getDepthData",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_getCameraPose",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_getDepthIntrinsics",
+          "Java_com_lvonasek_arcore3dscanner_main_JNI_getFrameTimestamp"
+        ],
+        "imports": [
+          "cstdio",
+          "sstream",
+          "arcore/service.h",
+          "exporter/csvposes.h",
+          "exporter/floorpln.h",
+          "postproc/optimizer.h",
+          "postproc/poisson.h",
+          "postproc/texturize.h",
+          "zconf.h",
+          "app.h"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\utils\\AppExecutors.java",
+        "language": "java",
+        "functions": [
+          "initExecutors",
+          "getInstance",
+          "isShutdown",
+          "diskIO",
+          "networkIO",
+          "computation",
+          "shutdown",
+          "executeDiskIO",
+          "executeNetworkIO",
+          "executeComputation"
+        ],
+        "imports": [
+          "java.util.concurrent.ExecutorService;",
+          "java.util.concurrent.Executors;",
+          "java.util.concurrent.RejectedExecutionException;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FolderAdapter.java",
+        "language": "java",
+        "functions": [
+          "onPathChanged",
+          "getCount",
+          "getItem",
+          "getItemId",
+          "@SuppressLint",
+          "addItem",
+          "clearItems",
+          "getPath",
+          "update"
+        ],
+        "imports": [
+          "android.annotation.SuppressLint;",
+          "android.content.Context;",
+          "android.view.LayoutInflater;",
+          "android.view.View;",
+          "android.view.ViewGroup;",
+          "android.widget.BaseAdapter;",
+          "android.widget.TextView;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "com.lvonasek.arcore3dscanner.main.Exporter;",
+          "java.io.File;",
+          "java.util.ArrayList;",
+          "java.util.Arrays;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Main.java",
+        "language": "java",
+        "functions": [
+          "getARMode",
+          "initServerStreaming",
+          "onConnected",
+          "onDisconnected",
+          "onError",
+          "onMeshReceived",
+          "onFrameAck",
+          "reconnectServer",
+          "sendDepthFrameToServer",
+          "bindAR",
+          "if",
+          "run",
+          "onKeyUp",
+          "getNavigationBarColor",
+          "getStatusBarColor",
+          "getGLView",
+          "onResume",
+          "onBackPressed",
+          "pauseScanning",
+          "onPause",
+          "onTouch",
+          "setViewerMode",
+          "captureScreenshot",
+          "onDrawFrame",
+          "onSurfaceCreated",
+          "onSurfaceChanged",
+          "save",
+          "showAndroidBugDialog"
+        ],
+        "imports": [
+          "android.app.ActivityManager;",
+          "android.app.AlertDialog;",
+          "android.app.Dialog;",
+          "android.content.Context;",
+          "android.content.Intent;",
+          "android.content.SharedPreferences;",
+          "android.content.pm.ActivityInfo;",
+          "android.graphics.Color;",
+          "android.location.Location;",
+          "android.os.Build;",
+          "android.os.Bundle;",
+          "android.preference.PreferenceManager;",
+          "android.util.DisplayMetrics;",
+          "android.util.Log;",
+          "android.view.Display;",
+          "android.view.KeyEvent;",
+          "android.view.MotionEvent;",
+          "android.view.View;",
+          "android.view.ViewGroup;",
+          "android.view.WindowManager;",
+          "android.widget.Button;",
+          "android.widget.CheckBox;",
+          "android.widget.FrameLayout;",
+          "android.widget.ImageButton;",
+          "android.widget.LinearLayout;",
+          "android.widget.ProgressBar;",
+          "android.widget.RelativeLayout;",
+          "android.widget.SeekBar;",
+          "android.widget.TextView;",
+          "androidx.core.content.FileProvider;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "com.lvonasek.arcore3dscanner.sketchfab.OAuth;",
+          "com.lvonasek.arcore3dscanner.ui.AbstractActivity;",
+          "com.lvonasek.arcore3dscanner.ui.CommonDialogs;",
+          "com.lvonasek.arcore3dscanner.ui.Service;",
+          "com.lvonasek.arcore3dscanner.main.ServerStreamClient;",
+          "com.lvonasek.arcore3dscanner.utils.AppExecutors;",
+          "com.lvonasek.gles.GLESSurfaceView;",
+          "com.lvonasek.record.Recorder;",
+          "com.lvonasek.utils.Compass;",
+          "com.lvonasek.utils.Compatibility;",
+          "com.lvonasek.utils.GPS;",
+          "com.lvonasek.arcore3dscanner.BuildConfig;",
+          "java.io.File;",
+          "java.io.FileOutputStream;",
+          "java.text.SimpleDateFormat;",
+          "java.util.ArrayList;",
+          "java.util.Date;",
+          "javax.microedition.khronos.egl.EGLConfig;",
+          "javax.microedition.khronos.opengles.GL10;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\GenericFileProvider.java",
+        "language": "java",
+        "functions": [],
+        "imports": [
+          "androidx.core.content.FileProvider;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Service.java",
+        "language": "java",
+        "functions": [
+          "onCreate",
+          "onStartCommand",
+          "onBind",
+          "finish",
+          "forceState",
+          "interrupt",
+          "process",
+          "getLink",
+          "getMessage",
+          "getRunning",
+          "setMessage",
+          "setMessageNotification",
+          "reset"
+        ],
+        "imports": [
+          "android.content.Context;",
+          "android.content.Intent;",
+          "android.content.SharedPreferences;",
+          "android.os.IBinder;",
+          "android.preference.PreferenceManager;",
+          "android.util.Log;",
+          "com.lvonasek.arcore3dscanner.main.JNI;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\RenameDialog.java",
+        "language": "java",
+        "functions": [],
+        "imports": [
+          "android.app.AlertDialog;",
+          "android.util.Log;",
+          "android.widget.EditText;",
+          "android.widget.ListView;",
+          "android.widget.TextView;",
+          "android.widget.Toast;",
+          "com.lvonasek.arcore3dscanner.main.Exporter;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "java.io.File;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Uploader.java",
+        "language": "java",
+        "functions": [
+          "onCreate",
+          "onShowFileChooser",
+          "setupPermissions",
+          "getNavigationBarColor",
+          "getStatusBarColor"
+        ],
+        "imports": [
+          "android.Manifest;",
+          "android.app.DownloadManager;",
+          "android.content.Intent;",
+          "android.content.pm.PackageManager;",
+          "android.graphics.Color;",
+          "android.net.Uri;",
+          "android.os.Bundle;",
+          "android.os.Environment;",
+          "android.webkit.CookieManager;",
+          "android.webkit.DownloadListener;",
+          "android.webkit.URLUtil;",
+          "android.webkit.ValueCallback;",
+          "android.webkit.WebChromeClient;",
+          "android.webkit.WebSettings;",
+          "android.webkit.WebView;",
+          "android.webkit.WebViewClient;",
+          "androidx.core.content.FileProvider;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "java.io.File;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Editor.java",
+        "language": "java",
+        "functions": [
+          "init",
+          "onProgressChanged",
+          "onStartTrackingTouch",
+          "onStopTrackingTouch",
+          "normalizeRect",
+          "onClick",
+          "onDraw",
+          "onTouch",
+          "initButtons",
+          "save",
+          "setMainScreen",
+          "setColorScreen",
+          "setSelectScreen",
+          "setTransformScreen",
+          "setViewScreen",
+          "showSeekBar",
+          "showText",
+          "swapNormals",
+          "initialized",
+          "movingLocked",
+          "applyTransform",
+          "touchEvent",
+          "updateAxisButtons"
+        ],
+        "imports": [
+          "android.app.AlertDialog;",
+          "android.content.Context;",
+          "android.graphics.Canvas;",
+          "android.graphics.Color;",
+          "android.graphics.Paint;",
+          "android.graphics.Point;",
+          "android.graphics.Rect;",
+          "android.util.AttributeSet;",
+          "android.util.Log;",
+          "android.view.MotionEvent;",
+          "android.view.View;",
+          "android.widget.Button;",
+          "android.widget.CheckBox;",
+          "android.widget.EditText;",
+          "android.widget.ProgressBar;",
+          "android.widget.SeekBar;",
+          "android.widget.TextView;",
+          "com.lvonasek.arcore3dscanner.ui.AbstractActivity;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "com.lvonasek.arcore3dscanner.utils.AppExecutors;",
+          "java.io.File;",
+          "java.util.ArrayList;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileManager.java",
+        "language": "java",
+        "functions": [
+          "onCreate",
+          "onBackPressed",
+          "getNavigationBarColor",
+          "getStatusBarColor",
+          "onResume",
+          "@SuppressLint",
+          "setupPermissions",
+          "showProgress",
+          "onClick",
+          "finishScanning",
+          "setColumns",
+          "setOptions"
+        ],
+        "imports": [
+          "android.Manifest;",
+          "android.annotation.SuppressLint;",
+          "android.app.AlertDialog;",
+          "android.app.Dialog;",
+          "android.content.Context;",
+          "android.content.Intent;",
+          "android.content.SharedPreferences;",
+          "android.content.pm.PackageManager;",
+          "android.graphics.Color;",
+          "android.graphics.drawable.Drawable;",
+          "android.net.Uri;",
+          "android.os.Bundle;",
+          "android.preference.PreferenceManager;",
+          "android.text.Html;",
+          "android.util.Log;",
+          "android.view.LayoutInflater;",
+          "android.view.MotionEvent;",
+          "android.view.View;",
+          "android.widget.Button;",
+          "android.widget.CheckBox;",
+          "android.widget.GridView;",
+          "android.widget.LinearLayout;",
+          "android.widget.ProgressBar;",
+          "android.widget.RelativeLayout;",
+          "android.widget.TextView;",
+          "android.widget.Toast;",
+          "com.google.ar.core.ArCoreApk;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "com.lvonasek.arcore3dscanner.main.Exporter;",
+          "com.lvonasek.arcore3dscanner.main.Main;",
+          "com.lvonasek.utils.Compatibility;",
+          "com.lvonasek.utils.IO;",
+          "java.io.File;",
+          "java.text.SimpleDateFormat;",
+          "java.util.ArrayList;",
+          "java.util.Date;",
+          "java.util.Locale;",
+          "java.util.Objects;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\OAuth.java",
+        "language": "java",
+        "functions": [
+          "getToken",
+          "onCreate",
+          "setupPermissions",
+          "onRequestPermissionsResult",
+          "getNavigationBarColor",
+          "getStatusBarColor"
+        ],
+        "imports": [
+          "android.Manifest;",
+          "android.content.Intent;",
+          "android.content.pm.PackageManager;",
+          "android.graphics.Color;",
+          "android.net.Uri;",
+          "android.os.Bundle;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "com.lvonasek.arcore3dscanner.ui.AbstractActivity;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\Retrofit.java",
+        "language": "java",
+        "functions": [
+          "@POST",
+          "getRetrofitInstance"
+        ],
+        "imports": [
+          "com.google.gson.Gson;",
+          "com.google.gson.GsonBuilder;",
+          "com.google.gson.annotations.SerializedName;",
+          "java.util.List;",
+          "java.util.concurrent.TimeUnit;",
+          "okhttp3.MultipartBody;",
+          "okhttp3.OkHttpClient;",
+          "retrofit2.Call;",
+          "retrofit2.converter.gson.GsonConverterFactory;",
+          "retrofit2.converter.scalars.ScalarsConverterFactory;",
+          "retrofit2.http.Header;",
+          "retrofit2.http.Multipart;",
+          "retrofit2.http.POST;",
+          "retrofit2.http.Part;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\JNI.java",
+        "language": "java",
+        "functions": [
+          "onARServiceConnected",
+          "onGlSurfaceChanged",
+          "onGlSurfaceDrawFrame",
+          "onToggleButtonClicked",
+          "onClearButtonClicked",
+          "onUndoButtonClicked",
+          "onUndoPreviewUpdate",
+          "onPause",
+          "extract",
+          "load",
+          "optimize",
+          "save",
+          "saveWithTextures",
+          "setTextureParams",
+          "texturize",
+          "setView",
+          "getDistance",
+          "getFloorLevel",
+          "getView",
+          "getEvent",
+          "getScanSize",
+          "restore",
+          "setPhotoMode",
+          "applyEffect",
+          "previewEffect",
+          "showNormals",
+          "applySelect",
+          "completeSelection",
+          "multSelection",
+          "circleSelection",
+          "rectSelection",
+          "animFinished",
+          "didARjump",
+          "freezeScan",
+          "getFrozenChunkCount",
+          "unfreezeScan",
+          "getDepthData",
+          "getCameraPose",
+          "getDepthIntrinsics",
+          "getFrameTimestamp"
+        ],
+        "imports": [
+          "android.content.Context;",
+          "android.content.res.Resources;",
+          "com.lvonasek.arcore3dscanner.R;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileAdapter.java",
+        "language": "java",
+        "functions": [
+          "IsAcceptingRotation",
+          "OnDrag",
+          "OnTwoFingerMove",
+          "OnTwoFingerRotation",
+          "OnPinchToZoom",
+          "getCount",
+          "getItem",
+          "getItemId",
+          "@SuppressLint",
+          "hasParent",
+          "toParent",
+          "loadIcon",
+          "getPath",
+          "update",
+          "hasPosition",
+          "showPosition",
+          "rename",
+          "setSelected",
+          "getSelected",
+          "hasExtension",
+          "forwardTouch"
+        ],
+        "imports": [
+          "android.annotation.SuppressLint;",
+          "android.app.AlertDialog;",
+          "android.app.Dialog;",
+          "android.content.Context;",
+          "android.content.Intent;",
+          "android.content.SharedPreferences;",
+          "android.graphics.Bitmap;",
+          "android.graphics.BitmapFactory;",
+          "android.graphics.drawable.BitmapDrawable;",
+          "android.graphics.drawable.Drawable;",
+          "android.net.Uri;",
+          "android.os.Build;",
+          "android.preference.PreferenceManager;",
+          "android.view.LayoutInflater;",
+          "android.view.MotionEvent;",
+          "android.view.View;",
+          "android.view.ViewGroup;",
+          "android.widget.BaseAdapter;",
+          "android.widget.GridView;",
+          "android.widget.ImageView;",
+          "android.widget.TextView;",
+          "android.widget.Toast;",
+          "androidx.core.content.FileProvider;",
+          "com.lvonasek.arcore3dscanner.BuildConfig;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "com.lvonasek.arcore3dscanner.main.Exporter;",
+          "com.lvonasek.arcore3dscanner.main.Main;",
+          "com.lvonasek.arcore3dscanner.sketchfab.OAuth;",
+          "com.lvonasek.utils.GestureDetector;",
+          "java.io.File;",
+          "java.io.FileInputStream;",
+          "java.io.FileOutputStream;",
+          "java.io.IOException;",
+          "java.util.ArrayList;",
+          "java.util.Arrays;",
+          "java.util.HashMap;",
+          "java.util.Locale;",
+          "java.util.Objects;",
+          "java.util.Scanner;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\HandMotionView.java",
+        "language": "java",
+        "functions": [
+          "onAttachedToWindow",
+          "applyTransformation"
+        ],
+        "imports": [
+          "android.app.Activity;",
+          "android.content.Context;",
+          "android.util.AttributeSet;",
+          "android.view.View;",
+          "android.view.animation.Animation;",
+          "android.view.animation.Transformation;",
+          "android.widget.FrameLayout;",
+          "android.widget.ImageView;",
+          "com.lvonasek.arcore3dscanner.R;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\ArrayAdapterWithIcons.java",
+        "language": "java",
+        "functions": [
+          "getCount",
+          "getItem",
+          "getItemId",
+          "getView"
+        ],
+        "imports": [
+          "android.content.Context;",
+          "android.graphics.drawable.Drawable;",
+          "android.view.LayoutInflater;",
+          "android.view.View;",
+          "android.view.ViewGroup;",
+          "android.widget.BaseAdapter;",
+          "android.widget.ImageView;",
+          "android.widget.TextView;",
+          "com.lvonasek.arcore3dscanner.R;",
+          "java.util.List;"
+        ]
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\CardboardActivity.java",
+        "language": "java",
+        "functions": [
+          "onCardboardTrigger",
+          "onFinishFrame",
+          "onKeyDown",
+          "onKeyUp"
+        ],
+        "imports": [
+          "android.view.KeyEvent;",
+          "com.google.vr.sdk.base.Viewport;"
+        ]
+      }
+    ],
+    "external_deps": {},
+    "total_internal": 32,
+    "total_external": 0
+  },
+  "hub_files": [],
+  "statistics": {
+    "by_language": {
+      "c": {
+        "file_count": 2,
+        "total_size": 4182,
+        "function_count": 0
+      },
+      "cpp": {
+        "file_count": 2,
+        "total_size": 53262,
+        "function_count": 56
+      },
+      "java": {
+        "file_count": 28,
+        "total_size": 199510,
+        "function_count": 215
+      }
+    },
+    "top_large_files": [
+      {
+        "path": "main\\libs\\sdk-base-1.190.0.aar",
+        "size": 4913785
+      },
+      {
+        "path": "CODEMAP.json",
+        "size": 119617
+      },
+      {
+        "path": "main\\jni\\app.cc",
+        "size": 48726
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Main.java",
+        "size": 29799
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Editor.java",
+        "size": 19595
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\CameraControl.java",
+        "size": 19582
+      },
+      {
+        "path": "CODEMAP.md",
+        "size": 19004
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileAdapter.java",
+        "size": 18427
+      },
+      {
+        "path": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileManager.java",
+        "size": 17553
+      },
+      {
+        "path": "main\\res\\layout\\view_editor.xml",
+        "size": 17262
+      }
+    ],
+    "function_count": 271,
+    "average_file_size": 52383
+  },
+  "symbols": {
+    "files": [
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\GenericFileProvider.java",
+        "language": "java"
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\CameraControl.java",
+        "language": "java",
+        "defined": [
+          "Move",
+          "createBitmapFromGLSurface",
+          "captureBitmap",
+          "enterVR",
+          "getMoveFactor",
+          "getViewMode",
+          "getVRButton",
+          "isViewMode",
+          "onDoubleClick",
+          "restoreView",
+          "setOffset",
+          "setViewerMode",
+          "updateButtons",
+          "updateCapture",
+          "updateMotion",
+          "updateView",
+          "updateView",
+          "updateViewYaw"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\DistanceMeasuring.java",
+        "language": "java",
+        "defined": [
+          "drawArrow",
+          "reset",
+          "setGesture"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Editor.java",
+        "language": "java",
+        "defined": [
+          "init",
+          "normalizeRect",
+          "initButtons",
+          "save",
+          "setMainScreen",
+          "setColorScreen",
+          "setSelectScreen",
+          "setTransformScreen",
+          "setViewScreen",
+          "showSeekBar",
+          "showText",
+          "swapNormals",
+          "initialized",
+          "movingLocked",
+          "applyTransform",
+          "touchEvent",
+          "updateAxisButtons"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Exporter.java",
+        "language": "java",
+        "defined": [
+          "compressModel",
+          "export",
+          "isFolder",
+          "getModelType",
+          "getMtlResource",
+          "getObjResources",
+          "makeStructure"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\HandMotionView.java",
+        "language": "java"
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Indicators.java",
+        "language": "java",
+        "defined": [
+          "disable",
+          "setOverrideMessage",
+          "getBatteryPercentage",
+          "updateText"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\JNI.java",
+        "language": "java",
+        "defined": [
+          "onARServiceConnected",
+          "onGlSurfaceChanged",
+          "onGlSurfaceDrawFrame",
+          "onToggleButtonClicked",
+          "onClearButtonClicked",
+          "onUndoButtonClicked",
+          "onUndoPreviewUpdate",
+          "onPause",
+          "extract",
+          "load",
+          "optimize",
+          "save",
+          "saveWithTextures",
+          "setTextureParams",
+          "texturize",
+          "setView",
+          "getDistance",
+          "getFloorLevel",
+          "getView",
+          "getEvent",
+          "getScanSize",
+          "restore",
+          "setPhotoMode",
+          "applyEffect",
+          "previewEffect",
+          "showNormals",
+          "applySelect",
+          "completeSelection",
+          "multSelection",
+          "circleSelection",
+          "rectSelection",
+          "animFinished",
+          "didARjump",
+          "freezeScan",
+          "getFrozenChunkCount",
+          "unfreezeScan",
+          "getDepthData",
+          "getCameraPose",
+          "getDepthIntrinsics",
+          "getFrameTimestamp",
+          "getEvent"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\Main.java",
+        "language": "java",
+        "defined": [
+          "getARMode",
+          "initServerStreaming",
+          "reconnectServer",
+          "sendDepthFrameToServer",
+          "bindAR",
+          "if",
+          "if",
+          "if",
+          "if",
+          "getGLView",
+          "pauseScanning",
+          "setViewerMode",
+          "captureScreenshot",
+          "save",
+          "showAndroidBugDialog"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\main\\ServerStreamClient.java",
+        "language": "java",
+        "defined": [
+          "onConnected",
+          "onDisconnected",
+          "onError",
+          "onMeshReceived",
+          "onFrameAck",
+          "setListener",
+          "connect",
+          "disconnect",
+          "isConnected",
+          "isInitialized",
+          "initialize",
+          "sendFrame",
+          "sendFrame",
+          "requestMesh",
+          "reset",
+          "handleMessage"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\OAuth.java",
+        "language": "java",
+        "defined": [
+          "getToken",
+          "setupPermissions"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\Retrofit.java",
+        "language": "java",
+        "defined": [
+          "getRetrofitInstance"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\sketchfab\\Uploader.java",
+        "language": "java",
+        "defined": [
+          "getDeviceName",
+          "getTags",
+          "publish"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\AbstractActivity.java",
+        "language": "java",
+        "defined": [
+          "convertDpToPx",
+          "convertPxToDp",
+          "deleteOnBackground",
+          "deleteRecursive",
+          "getNavigationBarHeight",
+          "getStatusBarHeight",
+          "getNavigationBarColor",
+          "getStatusBarColor",
+          "getBackend",
+          "getResolution",
+          "isCameraFeedOn",
+          "isFaceModeOn",
+          "isProVersion",
+          "isPostProcessLaterOn",
+          "isTofOn",
+          "isTofSupported",
+          "listFiles",
+          "openURL",
+          "setOrientation",
+          "setWindow",
+          "askForPermissions",
+          "getModel",
+          "getPath",
+          "getTempPath",
+          "hasFilesToMigrate",
+          "migrate"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\ArrayAdapterWithIcons.java",
+        "language": "java"
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\CommonDialogs.java",
+        "language": "java",
+        "defined": [
+          "confirmDialog",
+          "setImmersive",
+          "setImmersive"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileAdapter.java",
+        "language": "java",
+        "defined": [
+          "@SuppressLint",
+          "hasParent",
+          "toParent",
+          "loadIcon",
+          "getPath",
+          "update",
+          "hasPosition",
+          "showPosition",
+          "rename",
+          "setSelected",
+          "getSelected",
+          "hasExtension",
+          "forwardTouch"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FileManager.java",
+        "language": "java",
+        "defined": [
+          "@SuppressLint",
+          "setupPermissions",
+          "showProgress",
+          "finishScanning",
+          "setColumns",
+          "setOptions"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\FolderAdapter.java",
+        "language": "java",
+        "defined": [
+          "onPathChanged",
+          "@SuppressLint",
+          "addItem",
+          "clearItems",
+          "getPath",
+          "update"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Initializator.java",
+        "language": "java",
+        "defined": [
+          "getFile",
+          "hasFileIntent",
+          "isFirst"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\RenameDialog.java",
+        "language": "java"
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Service.java",
+        "language": "java",
+        "defined": [
+          "finish",
+          "forceState",
+          "interrupt",
+          "process",
+          "getLink",
+          "getMessage",
+          "getRunning",
+          "setMessage",
+          "setMessageNotification",
+          "reset"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Settings.java",
+        "language": "java",
+        "defined": [
+          "keepUpdated",
+          "getNavigationBarColor",
+          "getStatusBarColor",
+          "@SuppressLint"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\ui\\Uploader.java",
+        "language": "java",
+        "defined": [
+          "onShowFileChooser",
+          "setupPermissions"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\utils\\AppExecutors.java",
+        "language": "java",
+        "defined": [
+          "initExecutors",
+          "getInstance",
+          "isShutdown",
+          "diskIO",
+          "networkIO",
+          "computation",
+          "shutdown",
+          "executeDiskIO",
+          "executeNetworkIO",
+          "executeComputation"
+        ]
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\CardboardActivity.java",
+        "language": "java"
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\DaydreamActivity.java",
+        "language": "java"
+      },
+      {
+        "file": "main\\java\\com\\lvonasek\\arcore3dscanner\\vr\\VRActivity.java",
+        "language": "java",
+        "defined": [
+          "nativeLoadModel",
+          "nativeInitializeGl",
+          "nativeDrawFrame",
+          "nativeOnTriggerEvent",
+          "nativeUpdate"
+        ]
+      },
+      {
+        "file": "main\\jni\\app.cc",
+        "language": "cpp",
+        "defined": [
+          "AnalyseCallback",
+          "App::App",
+          "App::OnARServiceConnected",
+          "App::OnSurfaceChanged",
+          "App::OnDrawFrame",
+          "App::OnDrawScan",
+          "App::OnToggleButtonClicked",
+          "App::OnClearButtonClicked",
+          "App::OnUndoButtonClicked",
+          "App::OnUndoPreviewUpdate",
+          "App::OnPause",
+          "App::FreezeScan",
+          "App::GetFrozenChunkCount",
+          "App::UnfreezeScan",
+          "App::GetDepthData",
+          "App::GetCameraPose",
+          "App::GetDepthIntrinsics",
+          "App::GetFrameTimestamp",
+          "App::Extract",
+          "App::GetEvent",
+          "App::SetEvent",
+          "App::Load",
+          "App::Optimize",
+          "App::Save",
+          "App::SaveWithTextures",
+          "App::SetTextureParams",
+          "App::Texturize",
+          "App::GetDistance",
+          "App::GetFloorLevel",
+          "App::Backup",
+          "App::Restore",
+          "App::ApplyEffect",
+          "App::PreviewEffect",
+          "App::ShowNormals",
+          "App::ApplySelection",
+          "App::CompleteSelection",
+          "App::MultSelection",
+          "App::CircleSelection",
+          "App::RectSelection",
+          "App::SetView",
+          "App::AnimFinished",
+          "App::DidARJump",
+          "App::GetView",
+          "App::GetScanSize",
+          "App::SetPhotoMode",
+          "jbyteArray2string"
+        ]
+      },
+      {
+        "file": "main\\jni\\app.h",
+        "language": "c"
+      },
+      {
+        "file": "main\\jni\\renderer.cc",
+        "language": "cpp",
+        "defined": [
+          "Renderer::Load",
+          "Renderer::InitializeGl",
+          "Renderer::OnTriggerEvent",
+          "Renderer::DrawModel",
+          "Renderer::Update",
+          "JNI_METHOD",
+          "JNI_METHOD",
+          "JNI_METHOD",
+          "JNI_METHOD",
+          "JNI_METHOD"
+        ]
+      },
+      {
+        "file": "main\\jni\\renderer.h",
+        "language": "c"
+      }
+    ],
+    "summary": {
+      "c": 0,
+      "cpp": 0,
+      "java": 0
+    }
+  }
+}
